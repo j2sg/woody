@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #
@@ -20,18 +19,14 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import sys
-from PyQt4 import Qt
-from view import mainwindow
+from PyQt4.QtGui import QMainWindow
 
+class MainWindow(QMainWindow):
+	def __init__(self, parent = None):
+		super(MainWindow, self).__init__(parent)
+		self.createWidgets()
+		self.setWindowTitle(self.tr('Woody'))
 
-def main():
-	pass
-	app = Qt.QApplication(sys.argv)
-
-	window = mainwindow.MainWindow()
-	window.show()
-	app.exec_()
-
-if __name__ == '__main__': main()
+	def createWidgets(self):
+		pass
 
