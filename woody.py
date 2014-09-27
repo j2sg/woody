@@ -21,19 +21,21 @@
 #
 
 import sys
-from PyQt4 import Qt
-from view import mainwindow
-from persistence import persistencemanager
+from PyQt4.QtGui import QApplication
+from view.mainwindow import MainWindow
+from persistence.persistencemanager import PersistenceManager
 
 def main():
-	app = Qt.QApplication(sys.argv)
+	app = QApplication(sys.argv)
 
-	window = mainwindow.MainWindow()
+        persistenceManager = PersistenceManager()
+	
+	window = MainWindow()
 	window.show()
 
-        pm = persistencemanager.PersistenceManager()
 
 	app.exec_()
 
-if __name__ == '__main__': main()
+if __name__ == '__main__':
+	main()
 
