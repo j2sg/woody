@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #
@@ -20,20 +19,24 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import sys
-from PyQt4 import Qt
-from view import mainwindow
-from persistence import persistencemanager
+from PyQt4.QtCore import QSettings
 
-def main():
-	app = Qt.QApplication(sys.argv)
+class PersistenceManager:
+	def __init__(self):
+		pass
 
-	window = mainwindow.MainWindow()
-	window.show()
+	def existsConfig(self):
+		pass
 
-        pm = persistencemanager.PersistenceManager()
+	def createConfig(self, overwrite = False):
+		pass
 
-	app.exec_()
+	def deleteConfig(self):
+		pass
 
-if __name__ == '__main__': main()
+	def readConfig(self, key, group = None):
+		pass
+
+	def writeConfig(self, value, key, group = None):
+		pass
 
