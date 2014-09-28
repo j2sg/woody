@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #
@@ -20,38 +19,11 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import sys
-import atributes
-from PyQt4.QtGui import QApplication
-from view.mainwindow import MainWindow
-from persistence.persistencemanager import PersistenceManager
-
-
-def main():
-	app = QApplication(sys.argv)
-	
-	initApplication(app)
-	verifyConfig()
-	
-	window = MainWindow()
-	window.show()
-
-	app.exec_()
-
-def initApplication(app):
-	app.setOrganizationName(atributes.ORGANIZATION_NAME)
-	app.setOrganizationDomain(atributes.ORGANIZATION_DOMAIN)
-	app.setApplicationName(atributes.APPLICATION_NAME)
-	app.setApplicationVersion(atributes.APPLICATION_VERSION)
-
-def verifyConfig():
-	pm=PersistenceManager()
-	if not pm.existsConfig() and not pm.createConfig():
-		return False
-
-	return True
-
-
-if __name__ == '__main__':
-	main()
+ORGANIZATION_NAME='j2sg_software'
+ORGANIZATION_DOMAIN='http://j2sg.wordpress.com'
+AUTHOR_NAME='Juan Jose Salazar Garcia'
+AUTHOR_EMAIL='jjslzgc@gmail.com'
+APPLICATION_NAME='woody'
+APPLICATION_VERSION='0.0.1'
+APPLICATION_YEARS='2014'
 
