@@ -33,7 +33,7 @@ class PersistenceManager:
 		if self.existsConfig() and not overwrite:
 			return False
 
-		self.writeConfig(True, "Executed")
+		self.settings.setValue('Executed', True)
 
 		return True
 
@@ -49,9 +49,11 @@ class PersistenceManager:
 		if not self.existsConfig():
 			return None
 
-		self.settings.beginGroup(group)
+		if not group is None:
+			self.settings.beginGroup(group)
 		value = self.settings.value(key)
-		self.settings.endGroup()
+		if not group is None:
+			self.settings.endGroup()
 		
 		return value
 		
@@ -60,12 +62,13 @@ class PersistenceManager:
 		if not self.existsConfig():
 			return False
 
-		self.settings.beginGroup(group)
+		if not group is None:
+			self.settings.beginGroup(group)
 		if not self.settings.contains(key):
 			return False
-
 		self.settings.setValue(key, value)
-		self.settings.endGroup()
+		if not group is None:
+			self.settings.endGroup()
 
 		return True
 
