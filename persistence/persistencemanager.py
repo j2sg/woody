@@ -49,10 +49,12 @@ class PersistenceManager:
 		if not self.existsConfig():
 			return None
 
-		if not group is None:
+		if group:
 			self.settings.beginGroup(group)
+		
 		value = self.settings.value(key)
-		if not group is None:
+		
+		if group:
 			self.settings.endGroup()
 		
 		return value
@@ -62,12 +64,15 @@ class PersistenceManager:
 		if not self.existsConfig():
 			return False
 
-		if not group is None:
+		if group:
 			self.settings.beginGroup(group)
+
 		if not self.settings.contains(key):
 			return False
+
 		self.settings.setValue(key, value)
-		if not group is None:
+
+		if group:
 			self.settings.endGroup()
 
 		return True

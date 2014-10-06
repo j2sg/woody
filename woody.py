@@ -25,7 +25,7 @@ import atributes
 from PyQt4.QtGui import QApplication
 from view.mainwindow import MainWindow
 from persistence.persistencemanager import PersistenceManager
-
+from net.twittercontroller import TwitterController
 
 def main():
 	app = QApplication(sys.argv)
@@ -46,6 +46,7 @@ def initApplication(app):
 
 def verifyConfig():
 	pm=PersistenceManager()
+	
 	if not pm.existsConfig() and not pm.createConfig():
 		return False
 
