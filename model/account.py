@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #
@@ -20,38 +19,24 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import sys
-import atributes
-from PyQt4.QtGui import QApplication
-from view.mainwindow import MainWindow
-from persistence.persistencemanager import PersistenceManager
+from net.controller import Controller
 
-def main():
-	app = QApplication(sys.argv)
-	
-	initApplication(app)
-	verifyConfig()
-	
-	window = MainWindow()
-	window.show()
-	
-	app.exec_()
+class Account(object):
+	def __init__(self, network, name):
+		if not network in Controller.supported:
+			raise Exception('Protocol {} not supported'.format(network))
 
-def initApplication(app):
-	app.setOrganizationName(atributes.ORGANIZATION_NAME)
-	app.setOrganizationDomain(atributes.ORGANIZATION_DOMAIN)
-	app.setApplicationName(atributes.APPLICATION_NAME)
-	app.setApplicationVersion(atributes.APPLICATION_VERSION)
+		self.network = network
+		self.name = name
 
-def verifyConfig():
-	pm=PersistenceManager()
-	
-	if not pm.existsConfig() and not pm.createConfig():
-		return False
+class OAuthAccount(Account):
+	def __init__(self, network, name, key, secret):
+		super(OAuthAccount, self).__init__(network, name)
+		self.key = key
+		self.secret = secret
 
-	return True
-
-
-if __name__ == '__main__':
-	main()
-
+class UserPassAccount(Account):
+	def __init__(self, network, name, user, password):
+		super(UserPassAccount, self).__init__(network, name)
+		self.user = user
+		self.password = password

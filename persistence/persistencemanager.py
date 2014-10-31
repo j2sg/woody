@@ -22,7 +22,7 @@
 import atributes
 from PyQt4.QtCore import QSettings
 
-class PersistenceManager:
+class PersistenceManager(object):
 	def __init__(self):
 		self.settings = QSettings(atributes.ORGANIZATION_NAME, atributes.APPLICATION_NAME)
 
