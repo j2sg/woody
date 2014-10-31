@@ -19,22 +19,16 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-class TwitterController(object):
-	def __init__(self):
-		pass
+from twittercontroller import TwitterController
 
-	def login(self):
-		pass
-
-	def getTimeline(self, length = 10):
-		return []
-
-	def getFollowers(self):
-		return []
-
-	def getFollowing(self):
-		return []
-
-	def post(self, message):
-		return True
+class Controller(object):
+	supported = ['Twitter']
+	
+	@staticmethod
+	def getInstance(network):
+		if not network in Controller.supported:
+			raise Exception('Network {} not supported'.format(network))
+		
+		if network is 'Twitter':
+			return TwitterController()
 
