@@ -23,17 +23,16 @@ import atributes
 from PyQt4.QtCore import QSettings
 
 class PersistenceManager(object):
-	def __init__(self):
-		self.settings = QSettings(atributes.ORGANIZATION_NAME, atributes.APPLICATION_NAME)
+        _settings = QSettings(atributes.ORGANIZATION_NAME, atributes.APPLICATION_NAME)
 
 	def existsConfig(self):
-		return self.settings.value('Executed', False).toBool()
+                return PersistenceManager._settings.value('Executed', False).toBool()
 
 	def createConfig(self, overwrite = False):
 		if self.existsConfig() and not overwrite:
 			return False
 
-		self.settings.setValue('Executed', True)
+                PersistenceManager._settings.setValue('Executed', True)
 
 		return True
 
@@ -41,7 +40,7 @@ class PersistenceManager(object):
 		if not self.existsConfig():
 			return False
 
-		self.settings.clear()
+                PersistenceManager._settings.clear()
 
 		return True
 
@@ -50,12 +49,12 @@ class PersistenceManager(object):
 			return None
 
 		if group:
-			self.settings.beginGroup(group)
+                        PersistenceManager._settings.beginGroup(group)
 		
-		value = self.settings.value(key)
+		value = PersistenceManager._settings.value(key)
 		
 		if group:
-			self.settings.endGroup()
+			PersistenceManager._settings.endGroup()
 		
 		return value
 		
@@ -65,15 +64,14 @@ class PersistenceManager(object):
 			return False
 
 		if group:
-			self.settings.beginGroup(group)
+                        PersistenceManager._settings.beginGroup(group)
 
-		if not self.settings.contains(key):
+                if not PersistenceManager._settings.contains(key):
 			return False
 
-		self.settings.setValue(key, value)
+                PersistenceManager._settings.setValue(key, value)
 
 		if group:
-			self.settings.endGroup()
+                        PersistenceManager._settings.endGroup()
 
 		return True
-
