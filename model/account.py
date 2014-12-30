@@ -19,18 +19,13 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from net.controller import Controller
-
 class Account(object):
 	def __init__(self, network, name):
-		if not network in Controller.supported:
-			raise Exception('Protocol {} not supported'.format(network))
-
 		self.network = network
 		self.name = name
 
 class OAuthAccount(Account):
-	def __init__(self, network, name, key, secret):
+	def __init__(self, network, name, key = None, secret = None):
 		super(OAuthAccount, self).__init__(network, name)
 		self.key = key
 		self.secret = secret
@@ -40,3 +35,4 @@ class UserPassAccount(Account):
 		super(UserPassAccount, self).__init__(network, name)
 		self.user = user
 		self.password = password
+
