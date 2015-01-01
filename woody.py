@@ -25,13 +25,18 @@ import atributes
 from PyQt4.QtGui import QApplication
 from view.mainwindow import MainWindow
 from persistence.persistencemanager import PersistenceManager
+from model.account import OAuthAccount
+from net.twittercontroller import TwitterController
 
 def main():
 	app = QApplication(sys.argv)
 	
 	initApplication(app)
-	verifyConfig()
 	
+	if not verifyConfig():
+		print 'It has been occurred errors during config verification. Exit NOW!!!'
+		exit()
+
 	window = MainWindow()
 	window.show()
 	
@@ -44,14 +49,12 @@ def initApplication(app):
 	app.setApplicationVersion(atributes.APPLICATION_VERSION)
 
 def verifyConfig():
-	pm=PersistenceManager()
+        pm = PersistenceManager()
 	
 	if not pm.existsConfig() and not pm.createConfig():
 		return False
 
 	return True
 
-
 if __name__ == '__main__':
 	main()
-
