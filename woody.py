@@ -25,8 +25,6 @@ import atributes
 from PyQt4.QtGui import QApplication
 from view.mainwindow import MainWindow
 from persistence.persistencemanager import PersistenceManager
-from model.account import OAuthAccount
-from net.twittercontroller import TwitterController
 
 def main():
 	app = QApplication(sys.argv)

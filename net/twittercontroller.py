@@ -19,10 +19,9 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from tweepy import OAuthHandler
-from tweepy import API
+import tweepy
 
-class TwitterControllerAuthException(Exception):
+class TwitterControllerException(Exception):
 	def __init__(self, msg):
 		self.msg = msg
 
@@ -32,7 +31,7 @@ class TwitterController(object):
 
 	def __init__(self, account = None):
 		self.account = account
-		self._authHandler = OAuthHandler(TwitterController.consumerToken, TwitterController.consumerSecret)
+		self._authHandler = tweepy.OAuthHandler(TwitterController.consumerToken, TwitterController.consumerSecret)
 		self._api = None
 
 	def verify(self):
@@ -43,23 +42,22 @@ class TwitterController(object):
 
 	def auth(self):
 		if self.account is None:
-			raise TwitterControllerAuthException('TwitterController :: Auth :: Account is not set yet')
+			raise TwitterControllerException('TwitterController :: Auth :: Account is not set yet')
 		
 		if not self.account.key or not self.account.secret:
-			raise TwitterControllerAuthException('TwitterController :: Auth :: Tokens are not set yet')
+			raise TwitterControllerException('TwitterController :: Auth :: Tokens are not set yet')
 
 		self._authHandler.set_access_token(self.account.key, self.account.secret)
-		self._api = API(self._authHandler)
+		self._api = tweepy.API(self._authHandler)
 			
+	def timeline(self, limit = 0):
+		return tweepy.Cursor(self._api.user_timeline).items(limit)
 
-	def getTimeline(self, length = 10):
-		return []
+	def followers(self):
+		return tweepy.Cursor(self._api.followers).items()
 
-	def getFollowers(self):
-		return []
-
-	def getFollowing(self):
-		return []
+	def following(self):
+		return tweepy.Cursor(self._api.friends).items()
 
 	def post(self, message):
 		if self._api:
