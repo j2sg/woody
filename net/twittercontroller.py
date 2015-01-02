@@ -21,9 +21,7 @@
 
 import tweepy
 
-class TwitterControllerException(Exception):
-	def __init__(self, msg):
-		self.msg = msg
+from net.controllerexception import ControllerException
 
 class TwitterController(object):
 	consumerToken = 'jEvfZyViQyTIgnUyYfrCIgLkE'
@@ -42,10 +40,10 @@ class TwitterController(object):
 
 	def auth(self):
 		if self.account is None:
-			raise TwitterControllerException('TwitterController :: Auth :: Account is not set yet')
+			raise ControllerException('TwitterController :: Auth :: Account is not set yet')
 		
 		if not self.account.key or not self.account.secret:
-			raise TwitterControllerException('TwitterController :: Auth :: Tokens are not set yet')
+			raise ControllerException('TwitterController :: Auth :: Tokens are not set yet')
 
 		self._authHandler.set_access_token(self.account.key, self.account.secret)
 		self._api = tweepy.API(self._authHandler)
@@ -62,5 +60,4 @@ class TwitterController(object):
 	def post(self, message):
 		if self._api:
 			self._api.update_status(message)
-
 
