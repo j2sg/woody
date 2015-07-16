@@ -21,38 +21,9 @@
 #
 
 import sys
-import atributes
-from PyQt4.QtGui import QApplication
-from view.mainwindow import MainWindow
-from persistence.persistencemanager import PersistenceManager
 
 def main():
-	app = QApplication(sys.argv)
-	
-	initApplication(app)
-	
-	if not verifyConfig():
-		print 'It has been occurred errors during config verification. Exit NOW!!!'
-		exit()
-
-	window = MainWindow()
-	window.show()
-	
-	app.exec_()
-
-def initApplication(app):
-	app.setOrganizationName(atributes.ORGANIZATION_NAME)
-	app.setOrganizationDomain(atributes.ORGANIZATION_DOMAIN)
-	app.setApplicationName(atributes.APPLICATION_NAME)
-	app.setApplicationVersion(atributes.APPLICATION_VERSION)
-
-def verifyConfig():
-        pm = PersistenceManager()
-	
-	if not pm.existsConfig() and not pm.createConfig():
-		return False
-
-	return True
+	pass
 
 if __name__ == '__main__':
 	main()
