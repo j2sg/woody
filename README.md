@@ -1,6 +1,6 @@
 Woody 0.0.1
 
-   Copyright (c) 2014 Juan José Salazar García - jjslzgc@gmail.com
+   Copyright (c) 2014-2015 Juan José Salazar García - jjslzgc@gmail.com
 
    - Description
 

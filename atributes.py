@@ -3,7 +3,7 @@
 #
 #  This file is part of Woody.
 #
-#  Copyright (c) 2014 Juan Jose Salazar Garcia jjslzgc@gmail.com
+#  Copyright (c) 2014-2015 Juan Jose Salazar Garcia jjslzgc@gmail.com
 #
 #  Woody is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,5 +25,5 @@ AUTHOR_NAME='Juan Jose Salazar Garcia'
 AUTHOR_EMAIL='jjslzgc@gmail.com'
 APPLICATION_NAME='woody'
 APPLICATION_VERSION='0.0.1'
-APPLICATION_YEARS='2014'
+APPLICATION_YEARS='2014-2015'
 
