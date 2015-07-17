@@ -25,24 +25,18 @@ class TwitterController(object):
 	consumerToken = 'jEvfZyViQyTIgnUyYfrCIgLkE'
 	consumerSecret = 'bauGmd2ecotJzWjYHMML4X5HUHaNS6z4FtWZ68e6JikOQ1PkSO'
 
-	def __init__(self, account):
-                self.account = account
-		self._authHandler = tweepy.OAuthHandler(TwitterController.consumerToken, TwitterController.consumerSecret)
-		self._api = None
-		
-	
-	def register(self):
-		return self._authHandler.get_authorization_url()
+	def __init__(self, account, callback = None):
+		authHandler = tweepy.OAuthHandler(TwitterController.consumerToken, TwitterController.consumerSecret)
 
+		if not account.key or not account.secret:
+			verifier = callback(authHandler.get_authorization_url())
+			authHandler.get_access_token(verifier)
+			account.key, account.secret = authHandler.access_token, authHandler.access_token_secret
+		else:
+			authHandler.set_access_token(account.key, account.secret)
 
-	def auth(self, verifier = None):
-		if verifier:
-			self._authHandler.get_access_token(verifier)
-			self.account.key, self.account.secret = self._authHandler.access_token, self._authHandler.access_token_secret
-
-		self._authHandler.set_access_token(self.account.key, self.account.secret)
-		self._api = tweepy.API(self._authHandler)
-
+		self._api = tweepy.API(authHandler)
+			
 			
 	def timeline(self, limit = 0):
 		if not self._api:
