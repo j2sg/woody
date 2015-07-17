@@ -23,7 +23,7 @@ class ControllerException(Exception):
         def __init__(self, msg):
                 self.msg = msg
 
-class OAuthAuthorizationException(ControllerException):
+class NoAccessTokenException(ControllerException):
 	def __init__(self, msg, account, url):
 		super(TwitterControllerException, self).__init__(msg)
 		self.account = account
