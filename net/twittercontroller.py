@@ -21,43 +21,53 @@
 
 import tweepy
 
-from net.controllerexception import ControllerException
-
 class TwitterController(object):
 	consumerToken = 'jEvfZyViQyTIgnUyYfrCIgLkE'
 	consumerSecret = 'bauGmd2ecotJzWjYHMML4X5HUHaNS6z4FtWZ68e6JikOQ1PkSO'
 
-	def __init__(self, account = None):
-		self.account = account
+	def __init__(self, account):
+                self.account = account
 		self._authHandler = tweepy.OAuthHandler(TwitterController.consumerToken, TwitterController.consumerSecret)
 		self._api = None
-
-	def verify(self):
+		
+	
+	def register(self):
 		return self._authHandler.get_authorization_url()
 
-	def register(self, verifier):
-		self._authHandler.get_access_token(verifier)
 
-	def auth(self):
-		if self.account is None:
-			raise ControllerException('TwitterController :: Auth :: Account is not set yet')
-		
-		if not self.account.key or not self.account.secret:
-			raise ControllerException('TwitterController :: Auth :: Tokens are not set yet')
+	def auth(self, verifier = None):
+		if verifier:
+			self._authHandler.get_access_token(verifier)
+			self.account.key, self.account.secret = self._authHandler.access_token, self._authHandler.access_token_secret
 
 		self._authHandler.set_access_token(self.account.key, self.account.secret)
 		self._api = tweepy.API(self._authHandler)
+
 			
 	def timeline(self, limit = 0):
+		if not self._api:
+			return None
+		
 		return tweepy.Cursor(self._api.user_timeline).items(limit)
 
+
 	def followers(self):
+		if not self._api:
+			return None
+
 		return tweepy.Cursor(self._api.followers).items()
 
+
 	def following(self):
+		if not self._api:
+			return None
+
 		return tweepy.Cursor(self._api.friends).items()
 
+
 	def post(self, message):
-		if self._api:
-			self._api.update_status(message)
+		if not self._api:
+			return None
+		
+		self._api.update_status(message)
 
