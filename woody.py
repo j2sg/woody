@@ -20,10 +20,36 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import sys
+from model.account import OAuthAccount
+from net.twittercontroller import TwitterController
 
 def main():
-	pass
+	twitterAccount = OAuthAccount('Twitter', 'Test account')
+	twitterController = TwitterController(twitterAccount)
+	
+	print 'URL: ', twitterController.register()
+
+	verifier = raw_input('Verifier:')
+	
+	twitterController.auth(verifier)
+
+	twitterAccount = twitterController.account
+
+	print 'Access Token: ', twitterAccount.key
+	print 'Access Token Secret: ', twitterAccount.secret
+
+	print '### Timeline (10 last tweets) ###'
+	for tweet in twitterController.timeline(10):
+		print tweet.text
+
+	print '### Followers ###'
+	for follower in twitterController.followers():
+		print follower.screen_name
+	
+	print '### Following ###'
+	for following in twitterController.following():
+		print following.screen_name
+		
 
 if __name__ == '__main__':
 	main()
