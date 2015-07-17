@@ -19,6 +19,10 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+class Networks(object):
+	supported = ['Twitter',
+                     'Pump.io']
+
 class Account(object):
 	def __init__(self, network, name):
 		self.network = network
