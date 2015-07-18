@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 #
@@ -21,35 +21,36 @@
 #
 
 from model.account import OAuthAccount
-from net.twittercontroller import TwitterController
+#from net.twittercontroller import TwitterController
+from net.pumpcontroller import PumpController
+
+def register(url = None):
+	if url:
+		print(url)
+	return raw_input('Verifier:')
 
 def main():
-	twitterAccount = OAuthAccount('Twitter', 'Test account')
-	twitterController = TwitterController(twitterAccount)
-	
-	print 'URL: ', twitterController.register()
+	#twitterAccount = OAuthAccount('Twitter', 'Test account')
+	#twitterController = TwitterController(twitterAccount, register)
+	#
+	#print 'Access Token: ', twitterAccount.key
+	#print 'Access Token Secret: ', twitterAccount.secret
+	#
+	#print '### Timeline (10 last tweets) ###'
+	#for tweet in twitterController.timeline(10):
+	#	print tweet.text
+	#
+	#print '### Followers ###'
+	#for follower in twitterController.followers():
+	#	print follower.screen_name
+	#
+	#print '### Following ###'
+	#for following in twitterController.following():
+	#	print following.screen_name
+	pumpAccount = OAuthAccount('Pump.io', 'woodytester@microca.st')
+	pumpController = PumpController(pumpAccount, register)
+	print(pumpController.timeline(10))
 
-	verifier = raw_input('Verifier:')
-	
-	twitterController.auth(verifier)
-
-	twitterAccount = twitterController.account
-
-	print 'Access Token: ', twitterAccount.key
-	print 'Access Token Secret: ', twitterAccount.secret
-
-	print '### Timeline (10 last tweets) ###'
-	for tweet in twitterController.timeline(10):
-		print tweet.text
-
-	print '### Followers ###'
-	for follower in twitterController.followers():
-		print follower.screen_name
-	
-	print '### Following ###'
-	for following in twitterController.following():
-		print following.screen_name
-		
 
 if __name__ == '__main__':
 	main()
