@@ -22,27 +22,22 @@
 import pypump
 
 class PumpController(object):
+	def __init__(self, account, callback = None):
+		client = pypump.Client(webfinger=account.name, name='Woody4Pump', type='native')
+		self._api = pypump.PyPump(client=client, verifier_callback=callback)
 
-	def __init__(self, account = None):
-		pass
-
-	def verify(self):
-		pass
-
-	def register(self, verifier):
-		pass
-
-	def auth(self):
-		pass
 			
 	def timeline(self, limit = 0):
-		pass
+		return self._api.me.outbox[:limit]
+
 
 	def followers(self):
-		return []
+		return self._api.me.followers
+
 
 	def following(self):
-		return []
+		return self._api.me.following
+
 
 	def post(self, message):
 		pass
