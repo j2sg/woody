@@ -19,19 +19,11 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import os
+import json
+
 class PersistenceManager(object):
+	configFileName = 'config.json'
 	def existsConfig(self):
-        	pass
-
-	def createConfig(self, overwrite = False):
-		pass
-
-	def deleteConfig(self):
-		pass
-
-	def readConfig(self, key, group = None):
-		pass
-		
-	def writeConfig(self, value, key, group = None):
-		pass
+        	return os.path.isfile(PersistenceManager.configFileName)
 
