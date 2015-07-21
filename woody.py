@@ -20,33 +20,20 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from persistence.persistencemanager import PersistenceManager
 from model.account import OAuthAccount
 from net.twittercontroller import TwitterController
+
+
+def main():
+	persistenceManager = PersistenceManager()
+
 
 def register(url = None):
 	if url:
 		print(url)
 	return raw_input('Verifier:')
-
-def main():
-	twitterAccount = OAuthAccount('Twitter', 'Test account')
-	twitterController = TwitterController(twitterAccount, register)
 	
-	print 'Access Token: ', twitterAccount.key
-	print 'Access Token Secret: ', twitterAccount.secret
 	
-	print '### Timeline (10 last tweets) ###'
-	for tweet in twitterController.timeline(10):
-		print tweet.text
-	
-	print '### Followers ###'
-	for follower in twitterController.followers():
-		print follower.screen_name
-	
-	print '### Following ###'
-	for following in twitterController.following():
-		print following.screen_name
-	
-
 if __name__ == '__main__':
 	main()
