@@ -20,13 +20,46 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import sys
+
 from persistence.persistencemanager import PersistenceManager
 from model.account import OAuthAccount
 from net.twittercontroller import TwitterController
 
 
 def main():
-	persistenceManager = PersistenceManager()
+	initApp()
+	(cmd, args) = processArgs()
+
+	if cmd == 'LIST_ACCOUNTS':
+		listAccounts()
+	else:
+		print 'Unknown command'
+	
+
+def initApp():
+	pm = PersistenceManager()
+	if not pm.existsConfig():
+		pm.createConfig()
+
+
+def processArgs():
+	if len(sys.argv) < 2:
+		print '{0} <command> [args ...]'.format(sys.argv[0])
+		sys.exit(1)
+
+	add_account = False
+
+	for arg in sys.argv[1:]:
+		if arg == '--list-accounts':
+			return ('LIST_ACCOUNTS', None)
+			
+	return (None, None)
+
+def listAccounts():
+	pm = PersistenceManager()
+	accounts = pm.readConfig()['accounts']
+	print accounts
 
 
 def register(url = None):
