@@ -20,8 +20,7 @@
 #
 
 class Networks(object):
-	supported = ['Twitter',
-                     'Pump.io']
+	supported = ['Twitter']
 
 class Account(object):
 	def __init__(self, network, name):
