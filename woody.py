@@ -20,6 +20,8 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"Usage: %s <command> [param ...]"
+
 import sys
 
 from persistence.persistencemanager import PersistenceManager
@@ -28,13 +30,14 @@ from net.twittercontroller import TwitterController
 
 
 def main():
-	initApp()
-	(cmd, args) = processArgs()
+	command, params = processArgs()
 
-	if cmd == 'LIST_ACCOUNTS':
-		listAccounts()
-	else:
-		print 'Unknown command'
+	if not command:
+		print __doc__ % sys.argv[0]
+		sys.exit(1)
+
+	initApp()
+	execCommand(command, params)
 	
 
 def initApp():
@@ -44,17 +47,44 @@ def initApp():
 
 
 def processArgs():
-	if len(sys.argv) < 2:
-		print '{0} <command> [args ...]'.format(sys.argv[0])
-		sys.exit(1)
+	commands = {'CREATE_ACCOUNT' : 2,
+                    'REGISTER_ACCOUNT' : 1,
+                    'DELETE_ACCOUNT' : 1,
+                    'LIST_ACCOUNTS' : 0}
+	command = None
+	params = []
 
-	add_account = False
+	if len(sys.argv) < 2:
+		return (None, None)
 
 	for arg in sys.argv[1:]:
-		if arg == '--list-accounts':
-			return ('LIST_ACCOUNTS', None)
+		if arg[0] == '-':
+			if command:
+				return (None, None)
+			if arg == '-c' or arg == '--create-account':
+				command = 'CREATE_ACCOUNT'
+			elif arg == '-r' or arg == '--register-account':
+				command = 'REGISTER_ACCOUNT'
+			elif arg == '-d' or arg == '--del-account':
+				command = 'DELETE_ACCOUNT'
+			elif arg == '-l' or arg == '--list-accounts':
+				command = 'LIST_ACCOUNTS'
+			else:
+				return (None, None)
+		elif command:
+			params.append(arg)
+		else:
+			return (None, None)
+
+	if len(params) != commands[command]:
+		return (None, None)
 			
-	return (None, None)
+	return (command, params)
+
+
+def execCommand(cmd, args):
+	pass
+
 
 def listAccounts():
 	pm = PersistenceManager()
