@@ -26,4 +26,5 @@ AUTHOR_EMAIL='jjslzgc@gmail.com'
 APPLICATION_NAME='woody'
 APPLICATION_VERSION='0.0.1'
 APPLICATION_YEARS='2014-2015'
+APPLICATION_DESC='A simple and lightweight micro-blogging client'
 
