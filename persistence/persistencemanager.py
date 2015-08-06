@@ -23,47 +23,43 @@ import os
 import json
 
 class PersistenceManager(object):
-	configFileName = 'config.json'
-	def existsConfig(self):
-        	return os.path.isfile(PersistenceManager.configFileName)
+    configFileName = 'config.json'
 
-	
-	def createConfig(self, overwrite = False):
-		if self.existsConfig() and not overwrite:
-			return False
-		
-		config = {
-                          'app' : {}, 
-                          'accounts' : []
-                         }
-		
-		with open(PersistenceManager.configFileName, 'w') as configFile:
-			json.dump(config, configFile, indent = 3)
-
-		return True
-
-	
-	def deleteConfig(self):
-		if not self.existsConfig():
-			return False
-
-		os.remove(PersistenceManager.configFileName)
-
-		return True
-
-	def readConfig(self):
-		config = None
-		
-		if self.existsConfig():
-			with open(PersistenceManager.configFileName) as configFile:
-				config = json.load(configFile)
-
-		return config
+    def existsConfig(self):
+        return os.path.isfile(PersistenceManager.configFileName)
 
 
-	def writeConfig(self, config):
-		with open(PersistenceManager.configFileName, 'w') as configFile:
-			json.dump(config, configFile, indent = 3)
+    def createConfig(self, overwrite = False):
+        if self.existsConfig() and not overwrite:
+            return False
+
+        config = {'app' : {}, 'accounts' : []}
+
+        with open(PersistenceManager.configFileName, 'w') as configFile:
+            json.dump(config, configFile, indent = 4)
+
+        return True
 
 
+    def deleteConfig(self):
+        if not self.existsConfig():
+            return False
 
+        os.remove(PersistenceManager.configFileName)
+
+        return True
+
+
+    def readConfig(self):
+        config = None
+
+        if self.existsConfig():
+            with open(PersistenceManager.configFileName) as configFile:
+                config = json.load(configFile)
+
+            return config
+
+
+    def writeConfig(self, config):
+        with open(PersistenceManager.configFileName, 'w') as configFile:
+            json.dump(config, configFile, indent = 3)

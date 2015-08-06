@@ -22,25 +22,25 @@
 from account import Account
 
 class AccountManager(object):
-	def create(self, account):
-		pass
-
-	
-	def modify(self, account):
-		pass
+    def create(self, account):
+        pass
 
 
-	def remove(self, account):
-		pass
-
-	
-	def get(self, name):
-		pass
+    def modify(self, account):
+        pass
 
 
-	def getAllByType(self, type):
-		pass
+    def remove(self, account):
+        pass
 
 
-	def getAll(self):
-		pass
+    def get(self, name):
+        pass
+
+
+    def getAllByType(self, type):
+        pass
+
+
+    def getAll(self):
+        pass

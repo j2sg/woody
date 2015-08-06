@@ -20,22 +20,23 @@
 #
 
 class Networks(object):
-	supported = ['Twitter']
+    supported = ['Twitter']
 
 class Account(object):
-	def __init__(self, network, name):
-		self.network = network
-		self.name = name
+    def __init__(self, network, name):
+        self.network = network
+        self.name = name
+
 
 class OAuthAccount(Account):
-	def __init__(self, network, name, key = None, secret = None):
-		super(OAuthAccount, self).__init__(network, name)
-		self.key = key
-		self.secret = secret
+    def __init__(self, network, name, key = None, secret = None):
+        super(OAuthAccount, self).__init__(network, name)
+        self.key = key
+        self.secret = secret
+
 
 class UserPassAccount(Account):
-	def __init__(self, network, name, user, password):
-		super(UserPassAccount, self).__init__(network, name)
-		self.user = user
-		self.password = password
-
+    def __init__(self, network, name, user, password):
+        super(UserPassAccount, self).__init__(network, name)
+        self.user = user
+        self.password = password

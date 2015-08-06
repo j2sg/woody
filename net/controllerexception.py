@@ -20,11 +20,11 @@
 #                                                                                                                                                                                          
 
 class ControllerException(Exception):
-        def __init__(self, msg):
-                self.msg = msg
+    def __init__(self, msg):
+        self.msg = msg
+
 
 class TwitterControllerException(ControllerException):
-	def __init__(self, msg, account):
-		super(TwitterControllerException, self).__init__(msg)
-		self.account = account
-
+    def __init__(self, msg, account):
+        super(TwitterControllerException, self).__init__(msg)
+        self.account = account
