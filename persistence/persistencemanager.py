@@ -22,7 +22,7 @@
 import os
 import json
 
-from model.account import Networks
+from model.account import Account
 
 class PersistenceManager(object):
     configFileName = 'config.json'
@@ -35,7 +35,7 @@ class PersistenceManager(object):
         if self.existsConfig() and not overwrite:
             return False
 
-        config = {'app' : {}, 'accounts' : {net:[] for net in Networks.supported}}
+        config = {'app' : {}, 'accounts' : {net:[] for net in Account.supportedNetworks()}}
 
         with open(PersistenceManager.configFileName, 'w') as configFile:
             json.dump(config, configFile, indent = 4)
