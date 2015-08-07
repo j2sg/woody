@@ -78,14 +78,34 @@ class Account(object):
 
 
 class OAuthAccount(Account):
-    def __init__(self, network, name, key = None, secret = None):
+    def __init__(self, network, name, credentials = None):
         super(OAuthAccount, self).__init__(network, name)
-        self.key = key
-        self.secret = secret
+        self.setCredentials(credentials)
+
+
+    def setCredentials(self, credentials):
+        if not credentials:
+            self.key = self.secret = None
+        else:
+            self.key, self.secret = credentials
+
+
+    def credentials(self):
+        return (self.key, self.secret)
 
 
 class UserPassAccount(Account):
-    def __init__(self, network, name, user = None, password = None):
+    def __init__(self, network, name, credentials = None):
         super(UserPassAccount, self).__init__(network, name)
-        self.user = user
-        self.password = password
+        self.setCredentials(credentials)
+
+
+    def setCredentials(self, credentials):
+        if not credentials:
+            self.user = self.password = None
+        else:
+            self.user, self.password = credentials
+
+
+    def credentials(self):
+        return (self.user, self.password)
