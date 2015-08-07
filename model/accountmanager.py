@@ -20,27 +20,138 @@
 #
 
 from account import Account
+from account import OAuthAccount
+from persistence.persistencemanager import PersistenceManager
 
 class AccountManager(object):
     def create(self, account):
-        pass
+        if not Account.hasSupport(account.network):
+            return False
+
+        if self.exists(account):
+            return False
+
+        pm = PersistenceManager()
+
+        if not pm.existsConfig():
+            return False
+
+        config = pm.readConfig()
+
+        accountType = Account.networkToAccount(account.network)
+
+        if accountType == 'OAuth':
+            config['accounts'][account.network].append(dict(name = account.name,key = account.key, secret = account.secret))
+        elif accountType == 'UserPass':
+            config['accounts'][account.network].append(dict(name = account.name,user = account.user, password = account.password))
+
+        pm.writeConfig(config)
+
+        return True
 
 
-    def modify(self, account):
-        pass
+    def modify(self, account, newname = None):
+        if not Account.hasSupport(account.network):
+            return False
 
+        if not self.exists(account):
+            return False
+
+        pm = PersistenceManager()
+
+        if not pm.existsConfig():
+            return False
+
+        config = pm.readConfig()
+
+        accountType = Account.networkToAccount(account.network)
+
+        for entry in config['accounts'][network]:
+            if entry['name'] == account.name:
+                if newname:
+                    entry['name'] = newname
+                if accountType == 'OAuth':
+                    entry['key'], entry['secret'] = account.credentials()
+                elif accountType == 'UserPass':
+                    entry['user'], entry['password'] = account.credentials()
+
+                break
+
+        pm.writeConfig(config)
+
+        return True
 
     def remove(self, account):
-        pass
+        if not Account.hasSupport(account.network):
+            return False
+
+        if not self.exists(account):
+            return False
+
+        pm = PersistenceManager()
+
+        if not pm.existsConfig():
+            return False
+
+        config = pm.readConfig()
+
+        entry = None
+
+        for k in range(len(config['accounts'][account.network])):
+            entry = config['accounts'][account.network][k]
+
+            if entry['name'] == account.name:
+                break
+
+        config['accounts'][account.network].remove(entry)
+
+        pm.writeConfig(config)
+
+        return True
+
+    def get(self, network, name):
+        for account in self.getAllByNetwork(network):
+            if account.name == name:
+                return account
+
+        return None
 
 
-    def get(self, name):
-        pass
+    def getAllByNetwork(self, network):
+        if not Account.hasSupport(network):
+            return None
 
+        pm = PersistenceManager()
 
-    def getAllByType(self, type):
-        pass
+        if not pm.existsConfig():
+            return None
+
+        config = pm.readConfig()
+
+        accounts = []
+        accountType = Account.networkToAccount(network)
+
+        for entry in config['accounts'][network]:
+            account = Account.getAccount(network, entry['name'])
+
+            if accountType == 'OAuth':
+                account.setCredentials((entry['key'], entry['secret']))
+            elif accountType == 'UserPass':
+                account.setCredentials((entry['user'], entry['password']))
+
+            accounts.append(account)
+
+        return accounts
 
 
     def getAll(self):
-        pass
+        accounts = []
+
+        for network in Account.supportedNetworks():
+            accounts.extend(self.getAllByNetwork(network))
+
+        return accounts
+
+
+    def exists(self, account):
+        return not self.get(account.network, account.name) is None
