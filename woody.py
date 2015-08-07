@@ -26,7 +26,9 @@ import sys
 import atributes
 
 from persistence.persistencemanager import PersistenceManager
+from model.account import Account
 from model.account import OAuthAccount
+from model.accountmanager import AccountManager
 from net.twittercontroller import TwitterController
 
 def main():
@@ -49,8 +51,8 @@ def initApp():
 
 def processArgs():
     commands = {'CREATE_ACCOUNT' : 2,
-                'REGISTER_ACCOUNT' : 1,
-                'DELETE_ACCOUNT' : 1,
+                'REGISTER_ACCOUNT' : 2,
+                'DELETE_ACCOUNT' : 2,
                 'LIST_ACCOUNTS' : 0,
                 'HELP' : 0}
     command = None
@@ -87,7 +89,25 @@ def processArgs():
 
 
 def execCommand(cmd, args):
-    help()
+    am = AccountManager()
+
+    if cmd == 'CREATE_ACCOUNT':
+        account = Account.getAccount(args[0], args[1])
+        if account and am.create(account):
+            print 'Created {0} account {1}'.format(account.network, account.name)
+        else:
+            print 'There was an error during creation'
+    elif cmd == 'DELETE_ACCOUNT':
+        account = Account.getAccount(args[0], args[1])
+        if account and am.remove(account):
+            print 'Removed {0} account {1}'.format(account.network, account.name)
+        else:
+            print 'There was an error during elimination'
+    elif cmd == 'LIST_ACCOUNTS':
+        for account in am.getAll():
+            print '{0} account {1}'.format(account.network, account.name)
+    elif cmd == 'HELP':
+        help()
 
 
 def listAccounts():
@@ -101,8 +121,8 @@ def help():
     print '\n\t' + __doc__ % sys.argv[0]
     print '\nCOMMANDS'
     print '\n\t -c --create-account <network> <name>\tCreate a new social network account'
-    print '\n\t -r --register-account <name>\t\tRegister an existing account based on OAuth authentication'
-    print '\n\t -d --delete-account <name>\t\tDelete an existing account'
+    print '\n\t -r --register-account <network> <name>\t\tRegister an existing account'
+    print '\n\t -d --delete-account <network> <name>\t\tDelete an existing account'
     print '\n\t -l --list-accounts\t\t\tList all accounts'
     print '\n\t -h --help\t\t\t\tShow this help message\n'
 
