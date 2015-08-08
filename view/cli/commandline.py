@@ -79,30 +79,52 @@ class CommandLine(object):
 
 
     def execCommand(self, cmd, args):
-        am = AccountManager()
-
         if cmd == 'CREATE_ACCOUNT':
-            account = Account.getAccount(args[0], args[1])
-            if account and am.create(account):
-                print 'Created {0} account {1}'.format(account.network, account.name)
-            else:
-                print 'There was an error during creation'
+            self.createAccount(args[0], args[1])
+        elif cmd == 'REGISTER_ACCOUNT':
+            self.registerAccount(args[0], args[1])
         elif cmd == 'DELETE_ACCOUNT':
-            account = Account.getAccount(args[0], args[1])
-            if account and am.remove(account):
-                print 'Removed {0} account {1}'.format(account.network, account.name)
-            else:
-                print 'There was an error during elimination'
+            self.deleteAccount(args[0], args[1])
         elif cmd == 'LIST_ACCOUNTS':
-            for account in am.getAll():
-                print '{0} account {1}'.format(account.network, account.name)
+            self.listAccounts()
         elif cmd == 'HELP':
             self.help()
 
 
-    def register(self, url = None):
+    def createAccount(self, network, name):
+        account = Account.getAccount(network, name)
+        am = AccountManager()
+
+        if account and am.create(account):
+            print 'Create {0} account {1} : OK'.format(network, name)
+        else:
+            print 'Create {0} account {1} : FAIL'.format(network, name)
+
+
+    def registerAccount(self, network, name):
+        pass
+
+
+    def deleteAccount(self, network, name):
+        account = Account.getAccount(network, name)
+        am = AccountManager()
+
+        if account and am.remove(account):
+            print 'Delete {0} account {1} : OK'.format(network, name)
+        else:
+            print 'Delete {0} account {1} : FAIL'.format(network, name)
+
+
+    def listAccounts(self):
+        am = AccountManager()
+
+        for account in am.getAll():
+            print '{0} account {1}'.format(account.network, account.name)
+
+
+    def enterVerifier(self, url = None):
         if url:
-            print(url)
+            print 'URL: {0}'.format(url)
 
         return raw_input('Verifier:')
 
