@@ -21,7 +21,9 @@
 
 from account import Account
 from account import OAuthAccount
+from account import UserPassAccount
 from persistence.persistencemanager import PersistenceManager
+from net.twittercontroller import TwitterController
 
 class AccountManager(object):
     def create(self, account):
@@ -48,6 +50,31 @@ class AccountManager(object):
         pm.writeConfig(config)
 
         return True
+
+
+    def register(self, account, callback):
+        if not Account.hasSupport(account.network):
+            return False
+
+        if not self.exists(account):
+            return False
+
+        pm = PersistenceManager()
+
+        if not pm.existsConfig():
+            return False
+
+        config = pm.readConfig()
+
+        controller = None
+
+        if account.network == 'twitter':
+            controller = TwitterController(account, callback)
+
+        if not controller:
+            return False
+
+        return self.modify(account)
 
 
     def modify(self, account, newname = None):
