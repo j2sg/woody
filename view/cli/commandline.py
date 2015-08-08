@@ -102,7 +102,23 @@ class CommandLine(object):
 
 
     def registerAccount(self, network, name):
-        pass
+        account = Account.getAccount(network, name)
+        am = AccountManager()
+
+        if account:
+            accountType = Account.networkToAccount(network)
+            callback = None
+
+            if accountType == 'OAuth':
+                callback = self.enterOAuthVerifier
+            elif accountType == 'UserPass':
+                callback = self.enterUserPass
+
+            if callback and am.register(account, callback):
+                print 'Register {0} account {1} : OK'.format(network, name)
+        else:
+            print 'Register {0} account {1} : FAIL'.format(network, name)
+
 
 
     def deleteAccount(self, network, name):
@@ -122,11 +138,18 @@ class CommandLine(object):
             print '{0} account {1}'.format(account.network, account.name)
 
 
-    def enterVerifier(self, url = None):
+    def enterOAuthVerifier(self, url = None):
         if url:
             print 'URL: {0}'.format(url)
 
         return raw_input('Verifier:')
+
+
+    def enterUserPass(self):
+        user = raw_input('User:')
+        password = raw_input('Pass:')
+
+        return (user, password)
 
 
     def help(self):
