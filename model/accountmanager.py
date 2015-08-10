@@ -93,7 +93,7 @@ class AccountManager(object):
 
         accountType = Account.networkToAccount(account.network)
 
-        for entry in config['accounts'][network]:
+        for entry in config['accounts'][account.network]:
             if entry['name'] == account.name:
                 if newname:
                     entry['name'] = newname

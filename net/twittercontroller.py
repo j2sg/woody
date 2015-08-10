@@ -32,7 +32,7 @@ class TwitterController(object):
         if not account.key or not account.secret:
             verifier = callback(authHandler.get_authorization_url())
             authHandler.get_access_token(verifier)
-            account.key, account.secret = authHandler.access_token, authHandler.access_token_secret
+            account.key, account.secret = authHandler.access_token.key, authHandler.access_token.secret
         else:
             authHandler.set_access_token(account.key, account.secret)
 
