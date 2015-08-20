@@ -20,6 +20,8 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"Usage: %s <command> [param ...]"
+
 import sys
 import atributes
 

@@ -20,8 +20,6 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-"Usage: %s <command> [param ...]"
-
 from persistence.persistencemanager import PersistenceManager
 from view.cli.commandline import CommandLine
 
