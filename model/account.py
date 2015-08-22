@@ -53,11 +53,7 @@ class Account(object):
 
     @classmethod
     def hasSupport(cls, network):
-        for account in cls.supported:
-            if network in cls.supported[account]:
-                return True
-
-        return False
+        return network in cls.supportedNetworks()
 
 
     @classmethod
@@ -94,6 +90,10 @@ class OAuthAccount(Account):
         return (self.key, self.secret)
 
 
+    def isRegistered(self):
+        return self.key is None or self.secret is None
+
+
 class UserPassAccount(Account):
     def __init__(self, network, name, credentials = None):
         super(UserPassAccount, self).__init__(network, name)
@@ -109,3 +109,6 @@ class UserPassAccount(Account):
 
     def credentials(self):
         return (self.user, self.password)
+
+    def isRegistered(self):
+        return self.user is None or self.password is None

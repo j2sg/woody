@@ -137,7 +137,7 @@ class CommandLine(object):
         am = AccountManager()
 
         for account in am.getAll():
-            print '{0} account {1}'.format(account.network, account.name)
+            print '{0} account {1} [Registered: {2}]'.format(account.network, account.name, account.isRegistered())
 
 
     def enterOAuthVerifier(self, url = None):
