@@ -110,5 +110,6 @@ class UserPassAccount(Account):
     def credentials(self):
         return (self.user, self.password)
 
+
     def isRegistered(self):
         return self.user is None or self.password is None

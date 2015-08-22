@@ -42,11 +42,11 @@ class CommandLine(object):
 
 
     def processArgs(self):
-        commands = {'CREATE_ACCOUNT' : 2,
-                    'REGISTER_ACCOUNT' : 2,
-                    'DELETE_ACCOUNT' : 2,
-                    'LIST_ACCOUNTS' : 0,
-                    'HELP' : 0}
+        commands = {'CREATE_ACCOUNT' : [2,2],
+                    'REGISTER_ACCOUNT' : [2,2],
+                    'DELETE_ACCOUNT' : [2,2],
+                    'LIST_ACCOUNTS' : [0,1],
+                    'HELP' : [0,0]}
         command = None
         params = []
 
@@ -74,7 +74,7 @@ class CommandLine(object):
             else:
                 return (None, None)
 
-        if len(params) != commands[command]:
+        if len(params) < commands[command][0] or len(params) > commands[command][1]:
             return (None, None)
 
         return (command, params)
@@ -88,7 +88,8 @@ class CommandLine(object):
         elif cmd == 'DELETE_ACCOUNT':
             self.deleteAccount(args[0], args[1])
         elif cmd == 'LIST_ACCOUNTS':
-            self.listAccounts()
+            network = None if len(args) == 0 else args[0]
+            self.listAccounts(network)
         elif cmd == 'HELP':
             self.help()
 
@@ -133,11 +134,20 @@ class CommandLine(object):
             print 'Delete {0} account {1} : FAIL'.format(network, name)
 
 
-    def listAccounts(self):
+    def listAccounts(self, network):
         am = AccountManager()
+        accounts = am.getAll() if network is None else am.getAllByNetwork(network)
 
-        for account in am.getAll():
-            print '{0} account {1} [Registered: {2}]'.format(account.network, account.name, account.isRegistered())
+        print 'Account List:'
+
+        if len(accounts) == 0:
+            print 'Empty'
+            return
+
+        k = 0
+        for account in accounts:
+            print '\t[{0}] {1} account {2} [{3}]'.format(k, account.network, account.name, 'Registered' if account.isRegistered() else 'Not Registered')
+            k += 1
 
 
     def enterOAuthVerifier(self, url = None):
@@ -158,8 +168,8 @@ class CommandLine(object):
         print '{0} {1} - {2}'.format(atributes.APPLICATION_NAME, atributes.APPLICATION_VERSION, atributes.APPLICATION_DESC)
         print '\n\tUsage: {0} <command> [param ...]'.format(sys.argv[0])
         print '\nCOMMANDS'
-        print '\n\t -c --create-account <network> <name>\tCreate a new social network account'
+        print '\n\t -c --create-account <network> <name>\t\tCreate a new social network account'
         print '\n\t -r --register-account <network> <name>\t\tRegister an existing account'
         print '\n\t -d --delete-account <network> <name>\t\tDelete an existing account'
-        print '\n\t -l --list-accounts\t\t\tList all accounts'
-        print '\n\t -h --help\t\t\t\tShow this help message\n'
+        print '\n\t -l --list-accounts [network]\t\t\tList all accounts'
+        print '\n\t -h --help\t\t\t\t\tShow this help message\n'
