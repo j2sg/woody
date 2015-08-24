@@ -91,7 +91,7 @@ class OAuthAccount(Account):
 
 
     def isRegistered(self):
-        return self.key is None or self.secret is None
+        return not self.key is None and not self.secret is None
 
 
 class UserPassAccount(Account):
@@ -112,4 +112,4 @@ class UserPassAccount(Account):
 
 
     def isRegistered(self):
-        return self.user is None or self.password is None
+        return not self.user is None and not self.password is None
