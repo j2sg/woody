@@ -27,6 +27,7 @@ import atributes
 
 from model.account import Account
 from model.accountmanager import AccountManager
+from net.twittercontroller import TwitterController
 
 class CommandLine(object):
     def execute(self):
@@ -46,6 +47,7 @@ class CommandLine(object):
                     'REGISTER_ACCOUNT' : [2,2],
                     'DELETE_ACCOUNT' : [2,2],
                     'LIST_ACCOUNTS' : [0,1],
+                    'TIMELINE' : [2,3],
                     'HELP' : [0,0]}
         command = None
         params = []
@@ -65,6 +67,8 @@ class CommandLine(object):
                     command = 'DELETE_ACCOUNT'
                 elif arg == '-l' or arg == '--list-accounts':
                     command = 'LIST_ACCOUNTS'
+                elif arg == '-t' or arg == '--timeline':
+                    command = 'TIMELINE'
                 elif arg == '-h' or arg == '--help':
                     command = 'HELP'
                 else:
@@ -88,8 +92,9 @@ class CommandLine(object):
         elif cmd == 'DELETE_ACCOUNT':
             self.deleteAccount(args[0], args[1])
         elif cmd == 'LIST_ACCOUNTS':
-            network = None if len(args) == 0 else args[0]
-            self.listAccounts(network)
+            self.listAccounts(None if len(args) == 0 else args[0])
+        elif cmd == 'TIMELINE':
+            self.timeline(args[0], args[1], 0 if len(args) == 2 else args[2])
         elif cmd == 'HELP':
             self.help()
 
@@ -144,9 +149,23 @@ class CommandLine(object):
             print 'Empty'
             return
 
-        k = 0
+        k = 1
         for account in accounts:
             print '\t[{0}] {1} account {2} [{3}]'.format(k, account.network, account.name, 'Registered' if account.isRegistered() else 'Not Registered')
+            k += 1
+
+    def timeline(self, network, name, limit):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+
+        print '{0} account {1} Timeline:'.format(network, name)
+
+        k = 1
+        for tweet in controller.timeline(int(limit)):
+            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, tweet.user.name.encode('utf-8'), tweet.user.screen_name, tweet.created_at)
+            print '\t\t{0}'.format(tweet.text.encode('utf-8'))
+            print '\tRetweets: {0} Favorites: {1}'.format(tweet.retweet_count, tweet.favorite_count)
             k += 1
 
 
@@ -172,4 +191,5 @@ class CommandLine(object):
         print '\n\t -r --register-account <network> <name>\t\tRegister an existing account'
         print '\n\t -d --delete-account <network> <name>\t\tDelete an existing account'
         print '\n\t -l --list-accounts [network]\t\t\tList all accounts'
+        print '\n\t -t --timeline <network> <name> [limit]\t\tShow the current timeline for an existing and registered account'
         print '\n\t -h --help\t\t\t\t\tShow this help message\n'

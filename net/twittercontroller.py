@@ -29,7 +29,7 @@ class TwitterController(object):
     def __init__(self, account, callback = None):
         authHandler = tweepy.OAuthHandler(TwitterController.consumerToken, TwitterController.consumerSecret)
 
-        if not account.key or not account.secret:
+        if not account.isRegistered():
             verifier = callback(authHandler.get_authorization_url())
             authHandler.get_access_token(verifier)
             account.key, account.secret = authHandler.access_token.key, authHandler.access_token.secret
@@ -43,7 +43,7 @@ class TwitterController(object):
         if not self._api:
             return None
 
-        return tweepy.Cursor(self._api.user_timeline).items(limit)
+        return tweepy.Cursor(self._api.home_timeline).items(limit)
 
 
     def followers(self):
