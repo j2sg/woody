@@ -50,6 +50,7 @@ class CommandLine(object):
                     'TIMELINE' : [2,3],
                     'FOLLOWING' : [2,2],
                     'FOLLOWERS' : [2,2],
+                    'POST' : [3,3],
                     'HELP' : [0,0]}
         command = None
         params = []
@@ -75,6 +76,8 @@ class CommandLine(object):
                     command = 'FOLLOWING'
                 elif arg == '-F' or arg == '--followers':
                     command = 'FOLLOWERS'
+                elif arg == '-p' or arg == '--post':
+                    command = 'POST'
                 elif arg == '-h' or arg == '--help':
                     command = 'HELP'
                 else:
@@ -105,6 +108,8 @@ class CommandLine(object):
             self.following(args[0], args[1])
         elif cmd == 'FOLLOWERS':
             self.followers(args[0], args[1])
+        elif cmd == 'POST':
+            self.post(args[0], args[1], args[2])
         elif cmd == 'HELP':
             self.help()
 
@@ -207,6 +212,13 @@ class CommandLine(object):
             k += 1
 
 
+    def post(self, network, name, message):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+        controller.post(message)
+
+
     def enterOAuthVerifier(self, url = None):
         if url:
             print 'URL: {0}'.format(url)
@@ -229,7 +241,8 @@ class CommandLine(object):
         print '\n\t -r --register-account <network> <name>\t\tRegister an existing account'
         print '\n\t -d --delete-account <network> <name>\t\tDelete an existing account'
         print '\n\t -l --list-accounts [network]\t\t\tList all accounts'
-        print '\n\t -t --timeline <network> <name> [limit]\t\tShow the current timeline for an existing and registered account'
-        print '\n\t -f --following <network> <name>\t\tShow the list of users followed by an existing and registered account'
-        print '\n\t -F --followers <network> <name>\t\tShow the list of users following an existing and registered account'
+        print '\n\t -t --timeline <network> <name> [limit]\t\tShow the current timeline for an registered account'
+        print '\n\t -f --following <network> <name>\t\tShow the list of users followed by an registered account'
+        print '\n\t -F --followers <network> <name>\t\tShow the list of users following an registered account'
+        print '\n\t -p --post <network> <name> <message>\t\tPost a message on registered account'
         print '\n\t -h --help\t\t\t\t\tShow this help message\n'
