@@ -48,6 +48,7 @@ class CommandLine(object):
                     'DELETE_ACCOUNT' : [2,2],
                     'LIST_ACCOUNTS' : [0,1],
                     'TIMELINE' : [2,3],
+                    'FOLLOWING' : [2,2],
                     'HELP' : [0,0]}
         command = None
         params = []
@@ -69,6 +70,8 @@ class CommandLine(object):
                     command = 'LIST_ACCOUNTS'
                 elif arg == '-t' or arg == '--timeline':
                     command = 'TIMELINE'
+                elif arg == '-f' or arg == '--following':
+                    command = 'FOLLOWING'
                 elif arg == '-h' or arg == '--help':
                     command = 'HELP'
                 else:
@@ -95,6 +98,8 @@ class CommandLine(object):
             self.listAccounts(None if len(args) == 0 else args[0])
         elif cmd == 'TIMELINE':
             self.timeline(args[0], args[1], 0 if len(args) == 2 else args[2])
+        elif cmd == 'FOLLOWING':
+            self.following(args[0], args[1])
         elif cmd == 'HELP':
             self.help()
 
@@ -171,6 +176,19 @@ class CommandLine(object):
             k += 1
 
 
+    def following(self, network, name):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+
+        print '{0} account {1} Following:'.format(network, name)
+
+        k = 1
+        for user in controller.following():
+            print '\n\t[{0}] {1} (@{2}){3}'.format(k, user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t\t' + user.description.encode('utf-8'))
+            k += 1
+
+
     def enterOAuthVerifier(self, url = None):
         if url:
             print 'URL: {0}'.format(url)
@@ -194,4 +212,5 @@ class CommandLine(object):
         print '\n\t -d --delete-account <network> <name>\t\tDelete an existing account'
         print '\n\t -l --list-accounts [network]\t\t\tList all accounts'
         print '\n\t -t --timeline <network> <name> [limit]\t\tShow the current timeline for an existing and registered account'
+        print '\n\t -f --following <network> <name>\t\tShow the list of users followed by an existing and registered account'
         print '\n\t -h --help\t\t\t\t\tShow this help message\n'
