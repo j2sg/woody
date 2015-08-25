@@ -163,7 +163,9 @@ class CommandLine(object):
 
         k = 1
         for tweet in controller.timeline(int(limit)):
-            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, tweet.user.name.encode('utf-8'), tweet.user.screen_name, tweet.created_at)
+            print '\n\t[{0}] {1} (@{2}) {3}{4} via {5}'.format(k, tweet.user.name.encode('utf-8'), tweet.user.screen_name, tweet.created_at,
+                                                        '' if tweet.in_reply_to_screen_name is None else ' in reply to @' + tweet.in_reply_to_screen_name,
+                                                        tweet.source.encode('utf-8'))
             print '\t\t{0}'.format(tweet.text.encode('utf-8'))
             print '\tRetweets: {0} Favorites: {1}'.format(tweet.retweet_count, tweet.favorite_count)
             k += 1
