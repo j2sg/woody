@@ -43,7 +43,8 @@ class CommandLine(object):
 
 
     def processArgs(self):
-        commands = {'CREATE_ACCOUNT' : [2,2],
+        commands = {'NETWORKS' : [0,0],
+                    'CREATE_ACCOUNT' : [2,2],
                     'REGISTER_ACCOUNT' : [2,2],
                     'DELETE_ACCOUNT' : [2,2],
                     'LIST_ACCOUNTS' : [0,1],
@@ -62,7 +63,9 @@ class CommandLine(object):
             if arg[0] == '-':
                 if command:
                     return (None, None)
-                if arg == '-c' or arg == '--create-account':
+                if arg == '-n' or arg == '--networks':
+                    command = 'NETWORKS'
+                elif arg == '-c' or arg == '--create-account':
                     command = 'CREATE_ACCOUNT'
                 elif arg == '-r' or arg == '--register-account':
                     command = 'REGISTER_ACCOUNT'
@@ -94,7 +97,9 @@ class CommandLine(object):
 
 
     def execCommand(self, cmd, args):
-        if cmd == 'CREATE_ACCOUNT':
+        if cmd == 'NETWORKS':
+            self.networks()
+        elif cmd == 'CREATE_ACCOUNT':
             self.createAccount(args[0], args[1])
         elif cmd == 'REGISTER_ACCOUNT':
             self.registerAccount(args[0], args[1])
@@ -112,6 +117,13 @@ class CommandLine(object):
             self.post(args[0], args[1], args[2])
         elif cmd == 'HELP':
             self.help()
+
+    def networks(self):
+        print 'Networks:'
+        k = 1
+        for network in Account.supportedNetworks():
+            print '\t[{0}] {1}'.format(k, network)
+            k += 1
 
 
     def createAccount(self, network, name):
@@ -237,6 +249,7 @@ class CommandLine(object):
         print '{0} {1} - {2}'.format(atributes.APPLICATION_NAME, atributes.APPLICATION_VERSION, atributes.APPLICATION_DESC)
         print '\n\tUsage: {0} <command> [param ...]'.format(sys.argv[0])
         print '\nCOMMANDS'
+        print '\n\t -n --networks\t\t\tShow a list of the social networks supported by the application'
         print '\n\t -c --create-account <network> <name>\t\tCreate a new social network account'
         print '\n\t -r --register-account <network> <name>\t\tRegister an existing account'
         print '\n\t -d --delete-account <network> <name>\t\tDelete an existing account'
