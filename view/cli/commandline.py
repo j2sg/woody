@@ -48,6 +48,7 @@ class CommandLine(object):
                     'REGISTER_ACCOUNT' : [2,2],
                     'DELETE_ACCOUNT' : [2,2],
                     'LIST_ACCOUNTS' : [0,1],
+                    'ME' : [2,2],
                     'TIMELINE' : [2,3],
                     'FOLLOWING' : [2,2],
                     'FOLLOWERS' : [2,2],
@@ -73,6 +74,8 @@ class CommandLine(object):
                     command = 'DELETE_ACCOUNT'
                 elif arg == '-l' or arg == '--list-accounts':
                     command = 'LIST_ACCOUNTS'
+                elif arg == '-m' or arg == '--me':
+                    command = 'ME'
                 elif arg == '-t' or arg == '--timeline':
                     command = 'TIMELINE'
                 elif arg == '-f' or arg == '--following':
@@ -107,6 +110,8 @@ class CommandLine(object):
             self.deleteAccount(args[0], args[1])
         elif cmd == 'LIST_ACCOUNTS':
             self.listAccounts(None if len(args) == 0 else args[0])
+        elif cmd == 'ME':
+            self.me(args[0], args[1])
         elif cmd == 'TIMELINE':
             self.timeline(args[0], args[1], 0 if len(args) == 2 else args[2])
         elif cmd == 'FOLLOWING':
@@ -181,6 +186,19 @@ class CommandLine(object):
             print '\t[{0}] {1} account {2} [{3}]'.format(k, account.network, account.name, 'Registered' if account.isRegistered() else 'Not Registered')
             k += 1
 
+
+    def me(self, network, name):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+
+        print '{0} account {1} Me:'.format(network, name)
+        user = controller.me()
+        print '\n\t{0} (@{1}) {2}'.format(user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t' + user.description.encode('utf-8'))
+        print '\tLocation: {0}'.format(user.location)
+        print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
+
+
     def timeline(self, network, name, limit):
         am = AccountManager()
         account = am.get(network, name)
@@ -254,8 +272,9 @@ class CommandLine(object):
         print '\n\t -r --register-account <network> <name>\t\tRegister an existing account'
         print '\n\t -d --delete-account <network> <name>\t\tDelete an existing account'
         print '\n\t -l --list-accounts [network]\t\t\tList all accounts'
-        print '\n\t -t --timeline <network> <name> [limit]\t\tShow the current timeline for an registered account'
-        print '\n\t -f --following <network> <name>\t\tShow the list of users followed by an registered account'
-        print '\n\t -F --followers <network> <name>\t\tShow the list of users following an registered account'
+        print '\n\t -m --me <network> <name>\t\t\tShow information about your user for a registered account'
+        print '\n\t -t --timeline <network> <name> [limit]\t\tShow the current timeline for a registered account'
+        print '\n\t -f --following <network> <name>\t\tShow the list of users followed by a registered account'
+        print '\n\t -F --followers <network> <name>\t\tShow the list of users following a registered account'
         print '\n\t -p --post <network> <name> <message>\t\tPost a message on registered account'
         print '\n\t -h --help\t\t\t\t\tShow this help message\n'

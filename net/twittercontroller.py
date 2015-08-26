@@ -39,6 +39,13 @@ class TwitterController(object):
         self._api = tweepy.API(authHandler)
 
 
+    def me(self):
+        if not self._api:
+            return None
+
+        return self._api.me()
+
+
     def timeline(self, limit = 0):
         if not self._api:
             return None
