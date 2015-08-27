@@ -54,6 +54,7 @@ class CommandLine(object):
                     'FOLLOWERS' : [2,2],
                     'POST' : [3,3],
                     'USER' : [3,3],
+                    'USER_TIMELINE' : [3,4],
                     'HELP' : [0,0]}
         command = None
         params = []
@@ -87,6 +88,8 @@ class CommandLine(object):
                     command = 'POST'
                 elif arg == '-u' or arg == '--user':
                     command = 'USER'
+                elif arg == '-U' or arg == '--user-timeline':
+                    command = 'USER_TIMELINE'
                 elif arg == '-h' or arg == '--help':
                     command = 'HELP'
                 else:
@@ -125,6 +128,8 @@ class CommandLine(object):
             self.post(args[0], args[1], args[2])
         elif cmd == 'USER':
             self.user(args[0], args[1], args[2])
+        elif cmd == 'USER_TIMELINE':
+            self.userTimeline(args[0], args[1], args[2],  0 if len(args) == 3 else args[3])
         elif cmd == 'HELP':
             self.help()
 
@@ -270,6 +275,23 @@ class CommandLine(object):
         print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
 
 
+    def userTimeline(self, network, name, id, limit):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+
+        print '{0} account {1} User Timeline:'.format(network, name)
+
+        k = 1
+        for tweet in controller.userTimeline(id, int(limit)):
+            print '\n\t[{0}] {1} (@{2}) {3}{4} via {5}'.format(k, tweet.user.name.encode('utf-8'), tweet.user.screen_name, tweet.created_at,
+                                                        '' if tweet.in_reply_to_screen_name is None else ' in reply to @' + tweet.in_reply_to_screen_name,
+                                                        tweet.source.encode('utf-8'))
+            print '\t\t{0}'.format(tweet.text.encode('utf-8'))
+            print '\tRetweets: {0} Favorites: {1}'.format(tweet.retweet_count, tweet.favorite_count)
+            k += 1
+
+
     def enterOAuthVerifier(self, url = None):
         if url:
             print 'URL: {0}'.format(url)
@@ -288,15 +310,16 @@ class CommandLine(object):
         print '{0} {1} - {2}'.format(atributes.APPLICATION_NAME, atributes.APPLICATION_VERSION, atributes.APPLICATION_DESC)
         print '\n\tUsage: {0} <command> [param ...]'.format(sys.argv[0])
         print '\nCOMMANDS'
-        print '\n\t -n --networks\t\t\t\t\tShow the social networks supported by the application'
-        print '\n\t -c --create-account <network> <name>\t\tCreate a new social network account'
-        print '\n\t -r --register-account <network> <name>\t\tRegister an existing account'
-        print '\n\t -d --delete-account <network> <name>\t\tDelete an existing account'
-        print '\n\t -l --list-accounts [network]\t\t\tList all accounts'
-        print '\n\t -m --me <network> <name>\t\t\tShow information about your user for a registered account'
-        print '\n\t -t --timeline <network> <name> [limit]\t\tShow the current timeline for a registered account'
-        print '\n\t -f --following <network> <name>\t\tShow the list of users followed by a registered account'
-        print '\n\t -F --followers <network> <name>\t\tShow the list of users following a registered account'
-        print '\n\t -p --post <network> <name> <message>\t\tPost a message on registered account'
-        print '\n\t -u --user <network> <name> <user_id>\t\tShow information about user for a registered account'
-        print '\n\t -h --help\t\t\t\t\tShow this help message\n'
+        print '\n\t -n --networks\t\t\t\t\t\tShow the social networks supported by the application'
+        print '\n\t -c --create-account <network> <name>\t\t\tCreate a new social network account'
+        print '\n\t -r --register-account <network> <name>\t\t\tRegister an existing account'
+        print '\n\t -d --delete-account <network> <name>\t\t\tDelete an existing account'
+        print '\n\t -l --list-accounts [network]\t\t\t\tList all accounts'
+        print '\n\t -m --me <network> <name>\t\t\t\tShow information about your user for a registered account'
+        print '\n\t -t --timeline <network> <name> [limit]\t\t\tShow the current timeline for a registered account'
+        print '\n\t -f --following <network> <name>\t\t\tShow the list of users followed by a registered account'
+        print '\n\t -F --followers <network> <name>\t\t\tShow the list of users following a registered account'
+        print '\n\t -p --post <network> <name> <message>\t\t\tPost a message on registered account'
+        print '\n\t -u --user <network> <name> <user_id>\t\t\tShow information about user for a registered account'
+        print '\n\t -U --user-timeline <network> <name> <user_id> [limit]\tShow the current user timeline for a registered account'
+        print '\n\t -h --help\t\t\t\t\t\tShow this help message\n'

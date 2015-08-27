@@ -60,6 +60,13 @@ class TwitterController(object):
         return tweepy.Cursor(self._api.home_timeline).items(limit)
 
 
+    def userTimeline(self, id, limit = 0):
+        if not self._api:
+            return None
+
+        return self._api.user_timeline(screen_name = id, count = limit)
+
+
     def followers(self):
         if not self._api:
             return None
