@@ -50,6 +50,8 @@ class CommandLine(object):
                     'LIST_ACCOUNTS' : [0,1],
                     'ME' : [2,2],
                     'TIMELINE' : [2,3],
+                    'RECEIVED_MESSAGES' : [2,2],
+                    'SENT_MESSAGES' : [2,2],
                     'FOLLOWING' : [2,2],
                     'FOLLOWERS' : [2,2],
                     'POST' : [3,3],
@@ -80,6 +82,10 @@ class CommandLine(object):
                     command = 'ME'
                 elif arg == '-t' or arg == '--timeline':
                     command = 'TIMELINE'
+                elif arg == '-R' or arg == '--received-messages':
+                    command = 'RECEIVED_MESSAGES'
+                elif arg == '-s' or arg == '--sent-messages':
+                    command = 'SENT_MESSAGES'
                 elif arg == '-f' or arg == '--following':
                     command = 'FOLLOWING'
                 elif arg == '-F' or arg == '--followers':
@@ -120,6 +126,10 @@ class CommandLine(object):
             self.me(args[0], args[1])
         elif cmd == 'TIMELINE':
             self.timeline(args[0], args[1], 0 if len(args) == 2 else args[2])
+        elif cmd == 'RECEIVED_MESSAGES':
+            self.receivedMessages(args[0], args[1])
+        elif cmd == 'SENT_MESSAGES':
+            self.sentMessages(args[0], args[1])
         elif cmd == 'FOLLOWING':
             self.following(args[0], args[1])
         elif cmd == 'FOLLOWERS':
@@ -226,6 +236,34 @@ class CommandLine(object):
             k += 1
 
 
+    def receivedMessages(self, network, name):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+
+        print '{0} account {1} Received Messages:'.format(network, name)
+
+        k = 1
+        for message in controller.receivedMessages():
+            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, message.sender.name.encode('utf-8'), message.sender.screen_name, message.created_at)
+            print '\t\t{0}'.format(message.text.encode('utf-8'))
+            k += 1
+
+
+    def sentMessages(self, network, name):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+
+        print '{0} account {1} Sent Messages:'.format(network, name)
+
+        k = 1
+        for message in controller.sentMessages():
+            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, message.recipient.name.encode('utf-8'), message.recipient.screen_name, message.created_at)
+            print '\t\t{0}'.format(message.text.encode('utf-8'))
+            k += 1
+
+
     def following(self, network, name):
         am = AccountManager()
         account = am.get(network, name)
@@ -317,6 +355,8 @@ class CommandLine(object):
         print '\n\t -l --list-accounts [network]\t\t\t\tList all accounts'
         print '\n\t -m --me <network> <name>\t\t\t\tShow information about your user for a registered account'
         print '\n\t -t --timeline <network> <name> [limit]\t\t\tShow the current timeline for a registered account'
+        print '\n\t -R --received-messages <network> <name>\t\tShow the received messages for a registered account'
+        print '\n\t -s --sent-messages <network> <name>\t\t\tShow the sent messages for a registered account'
         print '\n\t -f --following <network> <name>\t\t\tShow the list of users followed by a registered account'
         print '\n\t -F --followers <network> <name>\t\t\tShow the list of users following a registered account'
         print '\n\t -p --post <network> <name> <message>\t\t\tPost a message on registered account'

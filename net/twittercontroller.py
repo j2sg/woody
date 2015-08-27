@@ -67,6 +67,20 @@ class TwitterController(object):
         return self._api.user_timeline(screen_name = id, count = limit)
 
 
+    def receivedMessages(self):
+        if not self._api:
+            return None
+
+        return tweepy.Cursor(self._api.direct_messages).items()
+
+
+    def sentMessages(self):
+        if not self._api:
+            return None
+
+        return tweepy.Cursor(self._api.sent_direct_messages).items()
+
+
     def followers(self):
         if not self._api:
             return None
