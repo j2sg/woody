@@ -46,6 +46,13 @@ class TwitterController(object):
         return self._api.me()
 
 
+    def user(self, id):
+        if not self._api:
+            return None
+
+        return self._api.get_user(screen_name = id)
+
+
     def timeline(self, limit = 0):
         if not self._api:
             return None

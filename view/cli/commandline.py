@@ -53,6 +53,7 @@ class CommandLine(object):
                     'FOLLOWING' : [2,2],
                     'FOLLOWERS' : [2,2],
                     'POST' : [3,3],
+                    'USER' : [3,3],
                     'HELP' : [0,0]}
         command = None
         params = []
@@ -84,6 +85,8 @@ class CommandLine(object):
                     command = 'FOLLOWERS'
                 elif arg == '-p' or arg == '--post':
                     command = 'POST'
+                elif arg == '-u' or arg == '--user':
+                    command = 'USER'
                 elif arg == '-h' or arg == '--help':
                     command = 'HELP'
                 else:
@@ -120,6 +123,8 @@ class CommandLine(object):
             self.followers(args[0], args[1])
         elif cmd == 'POST':
             self.post(args[0], args[1], args[2])
+        elif cmd == 'USER':
+            self.user(args[0], args[1], args[2])
         elif cmd == 'HELP':
             self.help()
 
@@ -253,6 +258,18 @@ class CommandLine(object):
         controller.post(message)
 
 
+    def user(self, network, name, id):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+
+        print '{0} account {1} User:'.format(network, name)
+        user = controller.user(id)
+        print '\n\t{0} (@{1}) {2}'.format(user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t' + user.description.encode('utf-8'))
+        print '\tLocation: {0}'.format(user.location.encode('utf-8'))
+        print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
+
+
     def enterOAuthVerifier(self, url = None):
         if url:
             print 'URL: {0}'.format(url)
@@ -281,4 +298,5 @@ class CommandLine(object):
         print '\n\t -f --following <network> <name>\t\tShow the list of users followed by a registered account'
         print '\n\t -F --followers <network> <name>\t\tShow the list of users following a registered account'
         print '\n\t -p --post <network> <name> <message>\t\tPost a message on registered account'
+        print '\n\t -u --user <network> <name> <user_id>\t\tShow information about user for a registered account'
         print '\n\t -h --help\t\t\t\t\tShow this help message\n'
