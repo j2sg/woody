@@ -127,7 +127,7 @@ class CommandLine(object):
         print 'Networks:'
         k = 1
         for network in Account.supportedNetworks():
-            print '\t[{0}] {1}'.format(k, network)
+            print '\t[{0}] {1} (Authentication: {2})'.format(k, network, Account.networkToAccount(network))
             k += 1
 
 
@@ -267,7 +267,7 @@ class CommandLine(object):
         print '{0} {1} - {2}'.format(atributes.APPLICATION_NAME, atributes.APPLICATION_VERSION, atributes.APPLICATION_DESC)
         print '\n\tUsage: {0} <command> [param ...]'.format(sys.argv[0])
         print '\nCOMMANDS'
-        print '\n\t -n --networks\t\t\tShow a list of the social networks supported by the application'
+        print '\n\t -n --networks\t\t\t\t\tShow the social networks supported by the application'
         print '\n\t -c --create-account <network> <name>\t\tCreate a new social network account'
         print '\n\t -r --register-account <network> <name>\t\tRegister an existing account'
         print '\n\t -d --delete-account <network> <name>\t\tDelete an existing account'
