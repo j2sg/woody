@@ -195,7 +195,7 @@ class CommandLine(object):
         print '{0} account {1} Me:'.format(network, name)
         user = controller.me()
         print '\n\t{0} (@{1}) {2}'.format(user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t' + user.description.encode('utf-8'))
-        print '\tLocation: {0}'.format(user.location)
+        print '\tLocation: {0}'.format(user.location.encode('utf-8'))
         print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
 
 
@@ -225,7 +225,9 @@ class CommandLine(object):
 
         k = 1
         for user in controller.following():
-            print '\n\t[{0}] {1} (@{2}){3}'.format(k, user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t\t' + user.description.encode('utf-8'))
+            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t' + user.description.encode('utf-8'))
+            print '\tLocation: {0}'.format(user.location.encode('utf-8'))
+            print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
             k += 1
 
 
@@ -238,7 +240,9 @@ class CommandLine(object):
 
         k = 1
         for user in controller.followers():
-            print '\n\t[{0}] {1} (@{2}){3}'.format(k, user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t\t' + user.description.encode('utf-8'))
+            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t' + user.description.encode('utf-8'))
+            print '\tLocation: {0}'.format(user.location.encode('utf-8'))
+            print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
             k += 1
 
 
