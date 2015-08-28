@@ -81,6 +81,13 @@ class TwitterController(object):
         return tweepy.Cursor(self._api.sent_direct_messages).items()
 
 
+    def sendMessage(self, id, message):
+        if not self._api:
+            return None
+
+        self._api.send_message(screen_name = id, text = message)
+
+
     def followers(self):
         if not self._api:
             return None

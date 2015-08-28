@@ -52,6 +52,7 @@ class CommandLine(object):
                     'TIMELINE' : [2,3],
                     'RECEIVED_MESSAGES' : [2,2],
                     'SENT_MESSAGES' : [2,2],
+                    'SEND_MESSAGE' : [4,4],
                     'FOLLOWING' : [2,2],
                     'FOLLOWERS' : [2,2],
                     'POST' : [3,3],
@@ -86,6 +87,8 @@ class CommandLine(object):
                     command = 'RECEIVED_MESSAGES'
                 elif arg == '-s' or arg == '--sent-messages':
                     command = 'SENT_MESSAGES'
+                elif arg == '-S' or arg == '--send-message':
+                    command = 'SEND_MESSAGE'
                 elif arg == '-f' or arg == '--following':
                     command = 'FOLLOWING'
                 elif arg == '-F' or arg == '--followers':
@@ -130,6 +133,8 @@ class CommandLine(object):
             self.receivedMessages(args[0], args[1])
         elif cmd == 'SENT_MESSAGES':
             self.sentMessages(args[0], args[1])
+        elif cmd == 'SEND_MESSAGE':
+            self.sendMessage(args[0], args[1], args[2], args[3])
         elif cmd == 'FOLLOWING':
             self.following(args[0], args[1])
         elif cmd == 'FOLLOWERS':
@@ -264,6 +269,13 @@ class CommandLine(object):
             k += 1
 
 
+    def sendMessage(self, network, name, id, message):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+        controller.post(message)
+
+
     def following(self, network, name):
         am = AccountManager()
         account = am.get(network, name)
@@ -348,18 +360,19 @@ class CommandLine(object):
         print '{0} {1} - {2}'.format(atributes.APPLICATION_NAME, atributes.APPLICATION_VERSION, atributes.APPLICATION_DESC)
         print '\n\tUsage: {0} <command> [param ...]'.format(sys.argv[0])
         print '\nCOMMANDS'
-        print '\n\t -n --networks\t\t\t\t\t\tShow the social networks supported by the application'
-        print '\n\t -c --create-account <network> <name>\t\t\tCreate a new social network account'
-        print '\n\t -r --register-account <network> <name>\t\t\tRegister an existing account'
-        print '\n\t -d --delete-account <network> <name>\t\t\tDelete an existing account'
-        print '\n\t -l --list-accounts [network]\t\t\t\tList all accounts'
-        print '\n\t -m --me <network> <name>\t\t\t\tShow information about your user for a registered account'
-        print '\n\t -t --timeline <network> <name> [limit]\t\t\tShow the current timeline for a registered account'
-        print '\n\t -R --received-messages <network> <name>\t\tShow the received messages for a registered account'
-        print '\n\t -s --sent-messages <network> <name>\t\t\tShow the sent messages for a registered account'
-        print '\n\t -f --following <network> <name>\t\t\tShow the list of users followed by a registered account'
-        print '\n\t -F --followers <network> <name>\t\t\tShow the list of users following a registered account'
-        print '\n\t -p --post <network> <name> <message>\t\t\tPost a message on registered account'
-        print '\n\t -u --user <network> <name> <user_id>\t\t\tShow information about user for a registered account'
-        print '\n\t -U --user-timeline <network> <name> <user_id> [limit]\tShow the current user timeline for a registered account'
-        print '\n\t -h --help\t\t\t\t\t\tShow this help message\n'
+        print '\n\t -n --networks\t\t\t\t\t\t\tShow the social networks supported by the application'
+        print '\n\t -c --create-account <network> <name>\t\t\t\tCreate a new social network account'
+        print '\n\t -r --register-account <network> <name>\t\t\t\tRegister an existing account'
+        print '\n\t -d --delete-account <network> <name>\t\t\t\tDelete an existing account'
+        print '\n\t -l --list-accounts [network]\t\t\t\t\tList all accounts'
+        print '\n\t -m --me <network> <name>\t\t\t\t\tShow information about your user for a registered account'
+        print '\n\t -t --timeline <network> <name> [limit]\t\t\t\tShow the current timeline for a registered account'
+        print '\n\t -R --received-messages <network> <name>\t\t\tShow the received messages for a registered account'
+        print '\n\t -s --sent-messages <network> <name>\t\t\t\tShow the sent messages for a registered account'
+        print '\n\t -S --send-message <network> <name> <user_id> <message>\t\tSend a message to an user for a registered account'
+        print '\n\t -f --following <network> <name>\t\t\t\tShow the list of users followed by a registered account'
+        print '\n\t -F --followers <network> <name>\t\t\t\tShow the list of users following a registered account'
+        print '\n\t -p --post <network> <name> <message>\t\t\t\tPost a message on registered account'
+        print '\n\t -u --user <network> <name> <user_id>\t\t\t\tShow information about user for a registered account'
+        print '\n\t -U --user-timeline <network> <name> <user_id> [limit]\t\tShow the current user timeline for a registered account'
+        print '\n\t -h --help\t\t\t\t\t\t\tShow this help message\n'
