@@ -237,7 +237,7 @@ class CommandLine(object):
                                                         '' if tweet.in_reply_to_screen_name is None else ' in reply to @' + tweet.in_reply_to_screen_name,
                                                         tweet.source.encode('utf-8'))
             print '\t\t{0}'.format(tweet.text.encode('utf-8'))
-            print '\tRetweets: {0} Favorites: {1}'.format(tweet.retweet_count, tweet.favorite_count)
+            print '\tID: {0} Retweets: {1} Favorites: {2}'.format(tweet.id, tweet.retweet_count, tweet.favorite_count)
             k += 1
 
 
@@ -338,7 +338,7 @@ class CommandLine(object):
                                                         '' if tweet.in_reply_to_screen_name is None else ' in reply to @' + tweet.in_reply_to_screen_name,
                                                         tweet.source.encode('utf-8'))
             print '\t\t{0}'.format(tweet.text.encode('utf-8'))
-            print '\tRetweets: {0} Favorites: {1}'.format(tweet.retweet_count, tweet.favorite_count)
+            print '\tID: {0} Retweets: {1} Favorites: {2}'.format(tweet.id, tweet.retweet_count, tweet.favorite_count)
             k += 1
 
 
