@@ -273,7 +273,7 @@ class CommandLine(object):
         am = AccountManager()
         account = am.get(network, name)
         controller = TwitterController(account)
-        controller.post(message)
+        controller.sendMessage(id, message)
 
 
     def following(self, network, name):

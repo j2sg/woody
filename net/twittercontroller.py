@@ -85,7 +85,7 @@ class TwitterController(object):
         if not self._api:
             return None
 
-        self._api.send_message(screen_name = id, text = message)
+        self._api.send_direct_message(screen_name = id, text = message)
 
 
     def followers(self):
