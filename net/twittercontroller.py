@@ -107,3 +107,10 @@ class TwitterController(object):
             return None
 
         return self._api.update_status(message)
+
+
+    def share(self, id):
+        if not self._api:
+            return None
+
+        return self._api.retweet(id)

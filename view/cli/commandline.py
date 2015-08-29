@@ -56,6 +56,7 @@ class CommandLine(object):
                     'FOLLOWING' : [2,2],
                     'FOLLOWERS' : [2,2],
                     'POST' : [3,3],
+                    'SHARE' : [3,3],
                     'USER' : [3,3],
                     'USER_TIMELINE' : [3,4],
                     'HELP' : [0,0]}
@@ -95,6 +96,8 @@ class CommandLine(object):
                     command = 'FOLLOWERS'
                 elif arg == '-p' or arg == '--post':
                     command = 'POST'
+                elif arg == '--share':
+                    command = 'SHARE'
                 elif arg == '-u' or arg == '--user':
                     command = 'USER'
                 elif arg == '-U' or arg == '--user-timeline':
@@ -141,6 +144,8 @@ class CommandLine(object):
             self.followers(args[0], args[1])
         elif cmd == 'POST':
             self.post(args[0], args[1], args[2])
+        elif cmd == 'SHARE':
+            self.share(args[0], args[1], args[2])
         elif cmd == 'USER':
             self.user(args[0], args[1], args[2])
         elif cmd == 'USER_TIMELINE':
@@ -312,7 +317,17 @@ class CommandLine(object):
         account = am.get(network, name)
         controller = TwitterController(account)
         tweet = controller.post(message)
+
         print '{0} account {1} Post: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
+
+
+    def share(self, network, name, id):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+        tweet = controller.share(int(id))
+
+        print '{0} account {1} Share: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
 
 
     def user(self, network, name, id):
@@ -375,6 +390,7 @@ class CommandLine(object):
         print '\n\t -f --following <network> <name>\t\t\t\tShow the list of users followed by a registered account'
         print '\n\t -F --followers <network> <name>\t\t\t\tShow the list of users following a registered account'
         print '\n\t -p --post <network> <name> <message>\t\t\t\tPost a message on registered account'
+        print '\n\t    --share <network> <name> <message_id>\t\t\tShare a message with followers on registered account'
         print '\n\t -u --user <network> <name> <user_id>\t\t\t\tShow information about user for a registered account'
         print '\n\t -U --user-timeline <network> <name> <user_id> [limit]\t\tShow the current user timeline for a registered account'
         print '\n\t -h --help\t\t\t\t\t\t\tShow this help message\n'
