@@ -273,7 +273,8 @@ class CommandLine(object):
         am = AccountManager()
         account = am.get(network, name)
         controller = TwitterController(account)
-        controller.sendMessage(id, message)
+        msg = controller.sendMessage(id, message)
+        print '{0} account {1} Send Message: {2}'.format(network, name, 'Error' if msg is None else 'OK - ID: ' + msg.id_str)
 
 
     def following(self, network, name):
@@ -310,7 +311,8 @@ class CommandLine(object):
         am = AccountManager()
         account = am.get(network, name)
         controller = TwitterController(account)
-        controller.post(message)
+        tweet = controller.post(message)
+        print '{0} account {1} Post: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
 
 
     def user(self, network, name, id):
