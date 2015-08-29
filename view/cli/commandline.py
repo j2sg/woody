@@ -57,6 +57,7 @@ class CommandLine(object):
                     'FOLLOWERS' : [2,2],
                     'POST' : [3,3],
                     'SHARE' : [3,3],
+                    'LIKE' : [3,3],
                     'USER' : [3,3],
                     'USER_TIMELINE' : [3,4],
                     'HELP' : [0,0]}
@@ -98,6 +99,8 @@ class CommandLine(object):
                     command = 'POST'
                 elif arg == '--share':
                     command = 'SHARE'
+                elif arg == '--like':
+                    command = 'LIKE'
                 elif arg == '-u' or arg == '--user':
                     command = 'USER'
                 elif arg == '-U' or arg == '--user-timeline':
@@ -146,6 +149,8 @@ class CommandLine(object):
             self.post(args[0], args[1], args[2])
         elif cmd == 'SHARE':
             self.share(args[0], args[1], args[2])
+        elif cmd == 'LIKE':
+            self.like(args[0], args[1], args[2])
         elif cmd == 'USER':
             self.user(args[0], args[1], args[2])
         elif cmd == 'USER_TIMELINE':
@@ -330,6 +335,15 @@ class CommandLine(object):
         print '{0} account {1} Share: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
 
 
+    def like(self, network, name, id):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+        tweet = controller.like(int(id))
+
+        print '{0} account {1} Like: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
+
+
     def user(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
@@ -391,6 +405,7 @@ class CommandLine(object):
         print '\n\t -F --followers <network> <name>\t\t\t\tShow the list of users following a registered account'
         print '\n\t -p --post <network> <name> <message>\t\t\t\tPost a message on registered account'
         print '\n\t    --share <network> <name> <message_id>\t\t\tShare a message with followers on registered account'
+        print '\n\t    --like <network> <name> <message_id>\t\t\tLike a message on registered account'
         print '\n\t -u --user <network> <name> <user_id>\t\t\t\tShow information about user for a registered account'
         print '\n\t -U --user-timeline <network> <name> <user_id> [limit]\t\tShow the current user timeline for a registered account'
         print '\n\t -h --help\t\t\t\t\t\t\tShow this help message\n'

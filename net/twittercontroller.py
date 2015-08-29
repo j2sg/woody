@@ -114,3 +114,10 @@ class TwitterController(object):
             return None
 
         return self._api.retweet(id)
+
+
+    def like(self, id):
+        if not self._api:
+            return None
+
+        return self._api.create_favorite(id)
