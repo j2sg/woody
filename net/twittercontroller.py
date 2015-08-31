@@ -149,3 +149,10 @@ class TwitterController(object):
             return None
 
         return self._api.create_favorite(id)
+
+
+    def unlike(self, id):
+        if not self._api:
+            return None
+
+        return self._api.destroy_favorite(id)

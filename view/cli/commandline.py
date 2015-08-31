@@ -62,6 +62,7 @@ class CommandLine(object):
                     'POST' : [3,3],
                     'SHARE' : [3,3],
                     'LIKE' : [3,3],
+                    'UNLIKE' : [3,3],
                     'USER' : [3,3],
                     'USER_TIMELINE' : [3,4],
                     'HELP' : [0,0]}
@@ -113,6 +114,8 @@ class CommandLine(object):
                     command = 'SHARE'
                 elif arg == '--like':
                     command = 'LIKE'
+                elif arg == '--unlike':
+                    command = 'UNLIKE'
                 elif arg == '-u' or arg == '--user':
                     command = 'USER'
                 elif arg == '-U' or arg == '--user-timeline':
@@ -171,6 +174,8 @@ class CommandLine(object):
             self.share(args[0], args[1], args[2])
         elif cmd == 'LIKE':
             self.like(args[0], args[1], args[2])
+        elif cmd == 'UNLIKE':
+            self.unlike(args[0], args[1], args[2])
         elif cmd == 'USER':
             self.user(args[0], args[1], args[2])
         elif cmd == 'USER_TIMELINE':
@@ -399,6 +404,15 @@ class CommandLine(object):
         print '{0} account {1} Like: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
 
 
+    def unlike(self, network, name, id):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+        tweet = controller.unlike(int(id))
+
+        print '{0} account {1} Unlike: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
+
+
     def user(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
@@ -464,6 +478,7 @@ class CommandLine(object):
         print '\n\t -p --post <network> <name> <message>\t\t\t\tPost a message on registered account'
         print '\n\t    --share <network> <name> <message_id>\t\t\tShare a message with followers on registered account'
         print '\n\t    --like <network> <name> <message_id>\t\t\tLike a message on registered account'
+        print '\n\t    --unlike <network> <name> <message_id>\t\t\tUnlike a message on registered account'
         print '\n\t -u --user <network> <name> <user_id>\t\t\t\tShow information about user for a registered account'
         print '\n\t -U --user-timeline <network> <name> <user_id> [limit]\t\tShow the current user timeline for a registered account'
         print '\n\t -h --help\t\t\t\t\t\t\tShow this help message\n'
