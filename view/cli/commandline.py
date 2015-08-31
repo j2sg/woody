@@ -58,6 +58,7 @@ class CommandLine(object):
                     'FOLLOW' : [3,3],
                     'UNFOLLOW' : [3,3],
                     'BLOCK' : [3,3],
+                    'UNBLOCK' : [3,3],
                     'POST' : [3,3],
                     'SHARE' : [3,3],
                     'LIKE' : [3,3],
@@ -104,6 +105,8 @@ class CommandLine(object):
                     command = 'UNFOLLOW'
                 elif arg == '--block':
                     command = 'BLOCK'
+                elif arg == '--unblock':
+                    command = 'UNBLOCK'
                 elif arg == '-p' or arg == '--post':
                     command = 'POST'
                 elif arg == '--share':
@@ -160,6 +163,8 @@ class CommandLine(object):
             self.unfollow(args[0], args[1], args[2])
         elif cmd == 'BLOCK':
             self.block(args[0], args[1], args[2])
+        elif cmd == 'UNBLOCK':
+            self.unblock(args[0], args[1], args[2])
         elif cmd == 'POST':
             self.post(args[0], args[1], args[2])
         elif cmd == 'SHARE':
@@ -348,6 +353,7 @@ class CommandLine(object):
 
         print '{0} account {1} Unfollow: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
 
+
     def block(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
@@ -355,6 +361,15 @@ class CommandLine(object):
         user = controller.block(id)
 
         print '{0} account {1} Block: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
+
+
+    def unblock(self, network, name, id):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+        user = controller.unblock(id)
+
+        print '{0} account {1} Unblock: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
 
 
     def post(self, network, name, message):

@@ -123,6 +123,13 @@ class TwitterController(object):
         return self._api.create_block(screen_name = id)
 
 
+    def unblock(self, id):
+        if not self._api:
+            return None
+
+        return self._api.destroy_block(screen_name = id)
+
+
     def post(self, message):
         if not self._api:
             return None
