@@ -102,6 +102,13 @@ class TwitterController(object):
         return tweepy.Cursor(self._api.friends).items()
 
 
+    def follow(self, id):
+        if not self._api:
+            return None
+
+        return self._api.create_friendship(screen_name = id)
+
+
     def post(self, message):
         if not self._api:
             return None

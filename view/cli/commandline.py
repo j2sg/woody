@@ -55,6 +55,7 @@ class CommandLine(object):
                     'SEND_MESSAGE' : [4,4],
                     'FOLLOWING' : [2,2],
                     'FOLLOWERS' : [2,2],
+                    'FOLLOW' : [3,3],
                     'POST' : [3,3],
                     'SHARE' : [3,3],
                     'LIKE' : [3,3],
@@ -95,6 +96,8 @@ class CommandLine(object):
                     command = 'FOLLOWING'
                 elif arg == '-F' or arg == '--followers':
                     command = 'FOLLOWERS'
+                elif arg == '--follow':
+                    command = 'FOLLOW'
                 elif arg == '-p' or arg == '--post':
                     command = 'POST'
                 elif arg == '--share':
@@ -145,6 +148,8 @@ class CommandLine(object):
             self.following(args[0], args[1])
         elif cmd == 'FOLLOWERS':
             self.followers(args[0], args[1])
+        elif cmd == 'FOLLOW':
+            self.follow(args[0], args[1], args[2])
         elif cmd == 'POST':
             self.post(args[0], args[1], args[2])
         elif cmd == 'SHARE':
@@ -316,6 +321,14 @@ class CommandLine(object):
             print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
             k += 1
 
+    def follow(self, network, name, id):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+        user = controller.follow(id)
+
+        print '{0} account {1} Follow: @{2}'.format(network, name, 'Error' if user is None else 'OK - ID: ' + user.screen_name)
+
 
     def post(self, network, name, message):
         am = AccountManager()
@@ -403,6 +416,7 @@ class CommandLine(object):
         print '\n\t -S --send-message <network> <name> <user_id> <message>\t\tSend a message to an user for a registered account'
         print '\n\t -f --following <network> <name>\t\t\t\tShow the list of users followed by a registered account'
         print '\n\t -F --followers <network> <name>\t\t\t\tShow the list of users following a registered account'
+        print '\n\t    --follow <network> <name> <user_id>\t\t\t\tFollow an user on registered account'
         print '\n\t -p --post <network> <name> <message>\t\t\t\tPost a message on registered account'
         print '\n\t    --share <network> <name> <message_id>\t\t\tShare a message with followers on registered account'
         print '\n\t    --like <network> <name> <message_id>\t\t\tLike a message on registered account'
