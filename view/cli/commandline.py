@@ -57,6 +57,7 @@ class CommandLine(object):
                     'FOLLOWERS' : [2,2],
                     'FOLLOW' : [3,3],
                     'UNFOLLOW' : [3,3],
+                    'BLOCK' : [3,3],
                     'POST' : [3,3],
                     'SHARE' : [3,3],
                     'LIKE' : [3,3],
@@ -101,6 +102,8 @@ class CommandLine(object):
                     command = 'FOLLOW'
                 elif arg == '--unfollow':
                     command = 'UNFOLLOW'
+                elif arg == '--block':
+                    command = 'BLOCK'
                 elif arg == '-p' or arg == '--post':
                     command = 'POST'
                 elif arg == '--share':
@@ -155,6 +158,8 @@ class CommandLine(object):
             self.follow(args[0], args[1], args[2])
         elif cmd == 'UNFOLLOW':
             self.unfollow(args[0], args[1], args[2])
+        elif cmd == 'BLOCK':
+            self.block(args[0], args[1], args[2])
         elif cmd == 'POST':
             self.post(args[0], args[1], args[2])
         elif cmd == 'SHARE':
@@ -343,6 +348,14 @@ class CommandLine(object):
 
         print '{0} account {1} Unfollow: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
 
+    def block(self, network, name, id):
+        am = AccountManager()
+        account = am.get(network, name)
+        controller = TwitterController(account)
+        user = controller.block(id)
+
+        print '{0} account {1} Block: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
+
 
     def post(self, network, name, message):
         am = AccountManager()
@@ -432,6 +445,7 @@ class CommandLine(object):
         print '\n\t -F --followers <network> <name>\t\t\t\tShow the list of users following a registered account'
         print '\n\t    --follow <network> <name> <user_id>\t\t\t\tFollow an user on registered account'
         print '\n\t    --unfollow <network> <name> <user_id>\t\t\tUnfollow an user on registered account'
+        print '\n\t    --block <network> <name> <user_id>\t\t\t\tBlock an user on registered account'
         print '\n\t -p --post <network> <name> <message>\t\t\t\tPost a message on registered account'
         print '\n\t    --share <network> <name> <message_id>\t\t\tShare a message with followers on registered account'
         print '\n\t    --like <network> <name> <message_id>\t\t\tLike a message on registered account'

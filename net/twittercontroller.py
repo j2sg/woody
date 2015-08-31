@@ -116,6 +116,13 @@ class TwitterController(object):
         return self._api.destroy_friendship(screen_name = id)
 
 
+    def block(self, id):
+        if not self._api:
+            return None
+
+        return self._api.create_block(screen_name = id)
+
+
     def post(self, message):
         if not self._api:
             return None
