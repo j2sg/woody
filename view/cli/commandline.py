@@ -483,6 +483,7 @@ class CommandLine(object):
         print '\n\t    --follow <network> <name> <user_id>\t\t\t\tFollow an user on registered account'
         print '\n\t    --unfollow <network> <name> <user_id>\t\t\tUnfollow an user on registered account'
         print '\n\t    --block <network> <name> <user_id>\t\t\t\tBlock an user on registered account'
+        print '\n\t    --unblock <network> <name> <user_id>\t\t\tUnblock an user on registered account'
         print '\n\t -p --post <network> <name> <message>\t\t\t\tPost a message on registered account'
         print '\n\t    --share <network> <name> <message_id>\t\t\tShare a message with followers on registered account'
         print '\n\t    --like <network> <name> <message_id>\t\t\tLike a message on registered account'
