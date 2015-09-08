@@ -27,7 +27,6 @@ import atributes
 
 from model.account import Account
 from model.accountmanager import AccountManager
-from net.twittercontroller import TwitterController
 
 class CommandLine(object):
     def execute(self):
@@ -250,7 +249,7 @@ class CommandLine(object):
     def me(self, network, name):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
 
         print '{0} account {1} Me:'.format(network, name)
         user = controller.me()
@@ -262,7 +261,7 @@ class CommandLine(object):
     def timeline(self, network, name, limit):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
 
         print '{0} account {1} Timeline:'.format(network, name)
 
@@ -279,7 +278,7 @@ class CommandLine(object):
     def receivedMessages(self, network, name):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
 
         print '{0} account {1} Received Messages:'.format(network, name)
 
@@ -293,7 +292,7 @@ class CommandLine(object):
     def sentMessages(self, network, name):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
 
         print '{0} account {1} Sent Messages:'.format(network, name)
 
@@ -307,7 +306,8 @@ class CommandLine(object):
     def sendMessage(self, network, name, id, message):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
+
         msg = controller.sendMessage(id, message)
         print '{0} account {1} Send Message: {2}'.format(network, name, 'Error' if msg is None else 'OK - ID: ' + msg.id_str)
 
@@ -315,7 +315,7 @@ class CommandLine(object):
     def following(self, network, name):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
 
         print '{0} account {1} Following:'.format(network, name)
 
@@ -330,7 +330,7 @@ class CommandLine(object):
     def followers(self, network, name):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
 
         print '{0} account {1} Followers:'.format(network, name)
 
@@ -344,7 +344,8 @@ class CommandLine(object):
     def follow(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
+
         user = controller.follow(id)
 
         print '{0} account {1} Follow: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
@@ -353,7 +354,8 @@ class CommandLine(object):
     def unfollow(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
+
         user = controller.unfollow(id)
 
         print '{0} account {1} Unfollow: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
@@ -362,7 +364,8 @@ class CommandLine(object):
     def block(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
+
         user = controller.block(id)
 
         print '{0} account {1} Block: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
@@ -371,7 +374,8 @@ class CommandLine(object):
     def unblock(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
+
         user = controller.unblock(id)
 
         print '{0} account {1} Unblock: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
@@ -380,7 +384,8 @@ class CommandLine(object):
     def post(self, network, name, message):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
+
         tweet = controller.post(message)
 
         print '{0} account {1} Post: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
@@ -389,7 +394,8 @@ class CommandLine(object):
     def share(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
+
         tweet = controller.share(int(id))
 
         print '{0} account {1} Share: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
@@ -398,7 +404,8 @@ class CommandLine(object):
     def like(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
+
         tweet = controller.like(int(id))
 
         print '{0} account {1} Like: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
@@ -407,7 +414,8 @@ class CommandLine(object):
     def unlike(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
+
         tweet = controller.unlike(int(id))
 
         print '{0} account {1} Unlike: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
@@ -416,7 +424,7 @@ class CommandLine(object):
     def user(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
 
         print '{0} account {1} User:'.format(network, name)
         user = controller.user(id)
@@ -428,7 +436,7 @@ class CommandLine(object):
     def userTimeline(self, network, name, id, limit):
         am = AccountManager()
         account = am.get(network, name)
-        controller = TwitterController(account)
+        controller = account.controller()
 
         print '{0} account {1} User Timeline:'.format(network, name)
 

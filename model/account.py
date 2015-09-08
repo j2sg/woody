@@ -19,6 +19,8 @@
 #  along with Woody.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from net.twittercontroller import TwitterController
+
 class Account(object):
     supported = {'OAuth'    : ['twitter'],
                  'UserPass' : []}
@@ -27,6 +29,15 @@ class Account(object):
     def __init__(self, network, name):
         self.network = network
         self.name = name
+        self._controller = None
+
+
+    def controller(self):
+        if self._controller is None:
+            if self.network == 'twitter':
+                self._controller = TwitterController(self)
+
+        return self._controller
 
 
     @classmethod
