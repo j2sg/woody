@@ -32,7 +32,10 @@ class TwitterController(object):
         if not account.isRegistered():
             verifier = callback(authHandler.get_authorization_url())
             authHandler.get_access_token(verifier)
-            account.key, account.secret = authHandler.access_token.key, authHandler.access_token.secret
+            if tweepy.__version__ < '3.2.0':
+                account.key, account.secret = authHandler.access_token.key, authHandler.access_token.secret
+            else:
+                account.key, account.secret = authHandler.access_token, authHandler.access_token_secret
         else:
             authHandler.set_access_token(account.key, account.secret)
 
