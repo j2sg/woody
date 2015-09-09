@@ -20,9 +20,10 @@
 #
 
 from net.twittercontroller import TwitterController
+from net.pumpcontroller import PumpController
 
 class Account(object):
-    supported = {'OAuth'    : ['twitter'],
+    supported = {'OAuth'    : ['twitter', 'pump.io'],
                  'UserPass' : []}
 
 
@@ -36,6 +37,8 @@ class Account(object):
         if self._controller is None:
             if self.network == 'twitter':
                 self._controller = TwitterController(self)
+            elif self.network == 'pump.io':
+                self._controller = PumpController(self)
 
         return self._controller
 

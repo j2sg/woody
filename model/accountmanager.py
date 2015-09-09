@@ -24,6 +24,7 @@ from account import OAuthAccount
 from account import UserPassAccount
 from persistence.persistencemanager import PersistenceManager
 from net.twittercontroller import TwitterController
+from net.pumpcontroller import PumpController
 
 class AccountManager(object):
     def create(self, account):
@@ -70,6 +71,8 @@ class AccountManager(object):
 
         if account.network == 'twitter':
             controller = TwitterController(account, callback)
+        elif account.network == 'pump.io':
+            controller = PumpController(account, callback)
 
         if not controller:
             return False
