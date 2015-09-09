@@ -44,7 +44,6 @@ class CommandLine(object):
     def processArgs(self):
         commands = {'NETWORKS' : [0,0],
                     'CREATE_ACCOUNT' : [2,2],
-                    'REGISTER_ACCOUNT' : [2,2],
                     'DELETE_ACCOUNT' : [2,2],
                     'LIST_ACCOUNTS' : [0,1],
                     'ME' : [2,2],
@@ -79,8 +78,6 @@ class CommandLine(object):
                     command = 'NETWORKS'
                 elif arg == '-c' or arg == '--create-account':
                     command = 'CREATE_ACCOUNT'
-                elif arg == '-r' or arg == '--register-account':
-                    command = 'REGISTER_ACCOUNT'
                 elif arg == '-d' or arg == '--delete-account':
                     command = 'DELETE_ACCOUNT'
                 elif arg == '-l' or arg == '--list-accounts':
@@ -139,8 +136,6 @@ class CommandLine(object):
             self.networks()
         elif cmd == 'CREATE_ACCOUNT':
             self.createAccount(args[0], args[1])
-        elif cmd == 'REGISTER_ACCOUNT':
-            self.registerAccount(args[0], args[1])
         elif cmd == 'DELETE_ACCOUNT':
             self.deleteAccount(args[0], args[1])
         elif cmd == 'LIST_ACCOUNTS':
@@ -196,15 +191,7 @@ class CommandLine(object):
 
         if account and am.create(account):
             print 'Create {0} account {1} : OK'.format(network, name)
-        else:
-            print 'Create {0} account {1} : FAIL'.format(network, name)
 
-
-    def registerAccount(self, network, name):
-        account = Account.getAccount(network, name)
-        am = AccountManager()
-
-        if account:
             accountType = Account.networkToAccount(network)
             callback = None
 
@@ -215,9 +202,11 @@ class CommandLine(object):
 
             if callback and am.register(account, callback):
                 print 'Register {0} account {1} : OK'.format(network, name)
+            else:
+                print 'Register {0} account {1} : FAIL'.format(network, name)
+                am.remove(account)
         else:
-            print 'Register {0} account {1} : FAIL'.format(network, name)
-
+            print 'Create {0} account {1} : FAIL'.format(network, name)
 
 
     def deleteAccount(self, network, name):
@@ -242,7 +231,7 @@ class CommandLine(object):
 
         k = 1
         for account in accounts:
-            print '\t[{0}] {1} account {2} [{3}]'.format(k, account.network, account.name, 'Registered' if account.isRegistered() else 'Not Registered')
+            print '\t[{0}] {1} account {2}'.format(k, account.network, account.name)
             k += 1
 
 
@@ -470,7 +459,6 @@ class CommandLine(object):
         print '\nCOMMANDS'
         print '\n\t -n --networks\t\t\t\t\t\t\tShow the social networks supported by the application'
         print '\n\t -c --create-account <network> <name>\t\t\t\tCreate a new social network account'
-        print '\n\t -r --register-account <network> <name>\t\t\t\tRegister an existing account'
         print '\n\t -d --delete-account <network> <name>\t\t\t\tDelete an existing account'
         print '\n\t -l --list-accounts [network]\t\t\t\t\tList all accounts'
         print '\n\t -m --me <network> <name>\t\t\t\t\tShow information about your user for a registered account'
