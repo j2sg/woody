@@ -23,8 +23,9 @@ import pypump
 
 class PumpController(object):
     def __init__(self, account, callback = None):
-        pass
+        client = pypump.Client(webfinger = account.name, name = 'Woody4Pump', type = 'native')
 
+        self._api = pypump.PyPump(client = client, verifier_callback = callback)
 
     def me(self):
         pass
