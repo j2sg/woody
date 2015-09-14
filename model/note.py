@@ -31,16 +31,16 @@ class Note(object):
         self.cc = None
         self.replyto = None
         self.source = None
-        self.shares = None
-        self.likes = None
+        self.shares = 0
+        self.likes = 0
 
 
     def __str__(self):
-        return '\n\t{0} (@{1}) {2}{3} via {4}\n\t\t{5}\n\tID: {6} Shares: {7} Likes: {8}'.format(self.author.name,
+        return '\n\t{0} (@{1}) {2}{3}{4}\n\t\t{5}\n\tID: {6} Shares: {7} Likes: {8}'.format(self.author.name,
                                                                                                  self.author.id,
                                                                                                  self.date,
                                                                                                  ' in reply to ' + self.replyto.id if self.replyto is not None else '',
-                                                                                                 self.source,
+                                                                                                 ' via ' + self.source if self.source is not None else '',
                                                                                                  self.content,
                                                                                                  self.id,
                                                                                                  self.shares,
