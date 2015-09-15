@@ -27,6 +27,8 @@ import atributes
 
 from model.account import Account
 from model.accountmanager import AccountManager
+from model.user import User
+from model.note import Note
 
 class CommandLine(object):
     def execute(self):
@@ -242,9 +244,7 @@ class CommandLine(object):
 
         print '{0} account {1} Me:'.format(network, name)
         user = controller.me()
-        print '\n\t{0} (@{1}) {2}'.format(user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t' + user.description.encode('utf-8'))
-        print '\tLocation: {0}'.format(user.location.encode('utf-8'))
-        print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
+        print user
 
 
     def timeline(self, network, name, limit):
@@ -254,14 +254,8 @@ class CommandLine(object):
 
         print '{0} account {1} Timeline:'.format(network, name)
 
-        k = 1
-        for tweet in controller.timeline(int(limit)):
-            print '\n\t[{0}] {1} (@{2}) {3}{4} via {5}'.format(k, tweet.user.name.encode('utf-8'), tweet.user.screen_name, tweet.created_at,
-                                                        '' if tweet.in_reply_to_screen_name is None else ' in reply to @' + tweet.in_reply_to_screen_name,
-                                                        tweet.source.encode('utf-8'))
-            print '\t\t{0}'.format(tweet.text.encode('utf-8'))
-            print '\tID: {0} Retweets: {1} Favorites: {2}'.format(tweet.id, tweet.retweet_count, tweet.favorite_count)
-            k += 1
+        for note in controller.timeline(int(limit)):
+            print note
 
 
     def receivedMessages(self, network, name):
@@ -271,11 +265,8 @@ class CommandLine(object):
 
         print '{0} account {1} Received Messages:'.format(network, name)
 
-        k = 1
         for message in controller.receivedMessages():
-            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, message.sender.name.encode('utf-8'), message.sender.screen_name, message.created_at)
-            print '\t\t{0}'.format(message.text.encode('utf-8'))
-            k += 1
+            print message
 
 
     def sentMessages(self, network, name):
@@ -285,20 +276,20 @@ class CommandLine(object):
 
         print '{0} account {1} Sent Messages:'.format(network, name)
 
-        k = 1
         for message in controller.sentMessages():
-            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, message.recipient.name.encode('utf-8'), message.recipient.screen_name, message.created_at)
-            print '\t\t{0}'.format(message.text.encode('utf-8'))
-            k += 1
+            print message
 
 
-    def sendMessage(self, network, name, id, message):
+    def sendMessage(self, network, name, id, msg):
         am = AccountManager()
         account = am.get(network, name)
         controller = account.controller()
+        receiver = controller.user(id)
+        message = Note(None, receiver, None, msg)
 
-        msg = controller.sendMessage(id, message)
-        print '{0} account {1} Send Message: {2}'.format(network, name, 'Error' if msg is None else 'OK - ID: ' + msg.id_str)
+        res = controller.sendMessage(message)
+
+        print '{0} account {1} Send Message: {2}'.format(network, name, 'Error' if not res else 'OK - ID: ' + message.id)
 
 
     def following(self, network, name):
@@ -308,12 +299,8 @@ class CommandLine(object):
 
         print '{0} account {1} Following:'.format(network, name)
 
-        k = 1
         for user in controller.following():
-            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t' + user.description.encode('utf-8'))
-            print '\tLocation: {0}'.format(user.location.encode('utf-8'))
-            print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
-            k += 1
+            print user
 
 
     def followers(self, network, name):
@@ -323,91 +310,96 @@ class CommandLine(object):
 
         print '{0} account {1} Followers:'.format(network, name)
 
-        k = 1
         for user in controller.followers():
-            print '\n\t[{0}] {1} (@{2}) {3}'.format(k, user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t' + user.description.encode('utf-8'))
-            print '\tLocation: {0}'.format(user.location.encode('utf-8'))
-            print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
-            k += 1
+            print user
+
 
     def follow(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
         controller = account.controller()
+        user = User(id)
 
-        user = controller.follow(id)
+        res = controller.follow(user)
 
-        print '{0} account {1} Follow: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
+        print '{0} account {1} Follow: {2}'.format(network, name, 'Error' if not res else 'OK - ID: @' + user.id)
 
 
     def unfollow(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
         controller = account.controller()
+        user = User(id)
 
-        user = controller.unfollow(id)
+        res = controller.unfollow(user)
 
-        print '{0} account {1} Unfollow: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
+        print '{0} account {1} Unfollow: {2}'.format(network, name, 'Error' if not res else 'OK - ID: @' + user.id)
 
 
     def block(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
         controller = account.controller()
+        user = User(id)
 
-        user = controller.block(id)
+        res = controller.block(user)
 
-        print '{0} account {1} Block: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
+        print '{0} account {1} Block: {2}'.format(network, name, 'Error' if not res else 'OK - ID: @' + user.id)
 
 
     def unblock(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
         controller = account.controller()
+        user = User(id)
 
-        user = controller.unblock(id)
+        res = controller.unblock(user)
 
-        print '{0} account {1} Unblock: {2}'.format(network, name, 'Error' if user is None else 'OK - ID: @' + user.screen_name)
+        print '{0} account {1} Unblock: {2}'.format(network, name, 'Error' if not res else 'OK - ID: @' + user.id)
 
 
     def post(self, network, name, message):
         am = AccountManager()
         account = am.get(network, name)
         controller = account.controller()
+        note = Note(None, None, None, message)
 
-        tweet = controller.post(message)
+        res = controller.post(note)
 
-        print '{0} account {1} Post: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
+        print '{0} account {1} Post: {2}'.format(network, name, 'Error' if not res else 'OK - ID: ' + note.id)
 
 
     def share(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
         controller = account.controller()
+        note = Note(id, None, None, None)
 
-        tweet = controller.share(int(id))
+        res = controller.share(note)
 
-        print '{0} account {1} Share: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
+        print '{0} account {1} Share: {2}'.format(network, name, 'Error' if not res else 'OK - ID: ' + note.id)
 
 
     def like(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
         controller = account.controller()
+        note = Note(id, None, None, None)
 
-        tweet = controller.like(int(id))
+        res = controller.like(note)
 
-        print '{0} account {1} Like: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
+        print '{0} account {1} Like: {2}'.format(network, name, 'Error' if not res else 'OK - ID: ' + note.id)
 
 
     def unlike(self, network, name, id):
         am = AccountManager()
         account = am.get(network, name)
         controller = account.controller()
+        note = Note(id, None, None, None)
 
-        tweet = controller.unlike(int(id))
+        res = controller.unlike(note)
 
-        print '{0} account {1} Unlike: {2}'.format(network, name, 'Error' if tweet is None else 'OK - ID: ' + tweet.id_str)
+        print '{0} account {1} Unlike: {2}'.format(network, name, 'Error' if not res else 'OK - ID: ' + note.id)
 
 
     def user(self, network, name, id):
@@ -416,10 +408,10 @@ class CommandLine(object):
         controller = account.controller()
 
         print '{0} account {1} User:'.format(network, name)
+
         user = controller.user(id)
-        print '\n\t{0} (@{1}) {2}'.format(user.name.encode('utf-8'), user.screen_name, '' if user.description is None else '\n\t' + user.description.encode('utf-8'))
-        print '\tLocation: {0}'.format(user.location.encode('utf-8'))
-        print '\tFollowing: {0} Followers: {1} Tweets: {2} Favorites: {3}'.format(user.friends_count, user.followers_count, user.statuses_count, user.favourites_count)
+
+        print user
 
 
     def userTimeline(self, network, name, id, limit):
@@ -429,14 +421,8 @@ class CommandLine(object):
 
         print '{0} account {1} User Timeline:'.format(network, name)
 
-        k = 1
-        for tweet in controller.userTimeline(id, int(limit)):
-            print '\n\t[{0}] {1} (@{2}) {3}{4} via {5}'.format(k, tweet.user.name.encode('utf-8'), tweet.user.screen_name, tweet.created_at,
-                                                        '' if tweet.in_reply_to_screen_name is None else ' in reply to @' + tweet.in_reply_to_screen_name,
-                                                        tweet.source.encode('utf-8'))
-            print '\t\t{0}'.format(tweet.text.encode('utf-8'))
-            print '\tID: {0} Retweets: {1} Favorites: {2}'.format(tweet.id, tweet.retweet_count, tweet.favorite_count)
-            k += 1
+        for note in controller.userTimeline(id, int(limit)):
+            print note
 
 
     def enterOAuthVerifier(self, url = None):
