@@ -20,7 +20,7 @@
 #
 
 class User(object):
-    def __init__(self, id, name, bio = None, location = None, following = 0, followers = 0, notes = 0, likes = 0):
+    def __init__(self, id, name = '', bio = None, location = None, following = 0, followers = 0, notes = 0, likes = 0):
         self.id = id
         self.name = name
         self.bio = bio
