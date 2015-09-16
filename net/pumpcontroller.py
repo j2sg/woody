@@ -51,11 +51,7 @@ class PumpController(object):
         pass
 
 
-    def sendMessage(self, id, message):
-        pass
-
-
-    def followers(self):
+    def sendMessage(self, message):
         pass
 
 
@@ -63,33 +59,37 @@ class PumpController(object):
         pass
 
 
-    def follow(self, id):
+    def followers(self):
         pass
 
 
-    def unfollow(self, id):
+    def follow(self, user):
         pass
 
 
-    def block(self, id):
+    def unfollow(self, user):
         pass
 
 
-    def unblock(self, id):
+    def block(self, user):
         pass
 
 
-    def post(self, message):
+    def unblock(self, user):
         pass
 
 
-    def share(self, id):
+    def post(self, note):
         pass
 
 
-    def like(self, id):
+    def share(self, note):
         pass
 
 
-    def unlike(self, id):
+    def like(self, note):
+        pass
+
+
+    def unlike(self, note):
         pass
