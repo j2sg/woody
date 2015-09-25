@@ -20,6 +20,7 @@
 #
 
 import pypump
+from model.user import User
 
 class PumpController(object):
     def __init__(self, account, callback = None):
@@ -32,7 +33,15 @@ class PumpController(object):
 
 
     def user(self, id):
-        pass
+        if not self._api or not id:
+            return None
+
+        res = self._api.Person(id)
+
+        return User(res.webfinger,
+                    res.display_name.encode('utf-8'),
+                    res.summary.encode('utf-8'),
+                    res.location.display_name.encode('utf-8')) if res is not None else None
 
 
     def timeline(self, limit = 0):
