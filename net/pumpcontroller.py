@@ -29,7 +29,12 @@ class PumpController(object):
         self._api = pypump.PyPump(client = client, verifier_callback = callback)
 
     def me(self):
-        pass
+        if not self._api:
+            return None
+
+        res = self._api.me
+
+        return self.user(res.webfinger)
 
 
     def user(self, id):
