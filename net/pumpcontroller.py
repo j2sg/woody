@@ -33,9 +33,7 @@ class PumpController(object):
         if not self._api:
             return None
 
-        res = self._api.me
-
-        return self.user(res.webfinger)
+        return self.user(self._api.me.webfinger)
 
 
     def user(self, id):
@@ -74,14 +72,9 @@ class PumpController(object):
         if not self._api or not id:
             return None
 
-        res = self._api.Person(id)
-
-        if not res:
-            return None
-
         notes = []
 
-        for activity in res.outbox.major[:limit]:
+        for activity in self._api.Person(id).outbox.major[:limit]:
             author = User(activity.actor.webfinger,
                           activity.actor.display_name.encode('utf-8'),
                           activity.actor.summary.encode('utf-8'),
@@ -143,12 +136,7 @@ class PumpController(object):
         if not self._api or not user:
             return False
 
-        res = self._api.Person(user.id)
-
-        if not res:
-            return False
-
-        res.follow()
+        self._api.Person(user.id).follow()
 
         return True
 
@@ -157,12 +145,7 @@ class PumpController(object):
         if not self._api or not user:
             return False
 
-        res = self._api.Person(user.id)
-
-        if not res:
-            return False
-
-        res.unfollow()
+        self._api.Person(user.id).unfollow()
 
         return True
 
