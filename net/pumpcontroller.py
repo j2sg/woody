@@ -71,7 +71,28 @@ class PumpController(object):
 
 
     def userTimeline(self, id, limit = 0):
-        pass
+        if not self._api or not id:
+            return None
+
+        res = self._api.Person(id)
+
+        if not res:
+            return None
+
+        notes = []
+
+        for activity in res.outbox.major[:limit]:
+            author = User(activity.actor.webfinger,
+                          activity.actor.display_name.encode('utf-8'),
+                          activity.actor.summary.encode('utf-8'),
+                          activity.actor.location.display_name.encode('utf-8'))
+
+            note = Note(activity.obj.url, author, activity.published, activity.obj.content.encode('utf-8') if activity.obj.content is not None else '')
+            note.source = str(activity.generator)
+
+            notes.append(note)
+
+        return notes
 
 
     def receivedMessages(self):
