@@ -168,11 +168,11 @@ class PumpController(object):
 
 
     def block(self, user):
-        pass
+        return None
 
 
     def unblock(self, user):
-        pass
+        return None
 
 
     def post(self, note):
