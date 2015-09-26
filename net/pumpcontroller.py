@@ -140,11 +140,31 @@ class PumpController(object):
 
 
     def follow(self, user):
-        pass
+        if not self._api or not user:
+            return False
+
+        res = self._api.Person(user.id)
+
+        if not res:
+            return False
+
+        res.follow()
+
+        return True
 
 
     def unfollow(self, user):
-        pass
+        if not self._api or not user:
+            return False
+
+        res = self._api.Person(user.id)
+
+        if not res:
+            return False
+
+        res.unfollow()
+
+        return True
 
 
     def block(self, user):
