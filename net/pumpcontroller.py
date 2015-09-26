@@ -108,11 +108,35 @@ class PumpController(object):
 
 
     def following(self):
-        pass
+        if not self._api:
+            return None
+
+        users = []
+
+        for friend in self._api.me.following:
+            user = User(friend.webfinger,
+                        friend.display_name.encode('utf-8'),
+                        friend.summary.encode('utf-8'),
+                        friend.location.display_name.encode('utf-8'))
+            users.append(user)
+
+        return users
 
 
     def followers(self):
-        pass
+        if not self._api:
+            return None
+
+        users = []
+
+        for friend in self._api.me.followers:
+            user = User(friend.webfinger,
+                        friend.display_name.encode('utf-8'),
+                        friend.summary.encode('utf-8'),
+                        friend.location.display_name.encode('utf-8'))
+            users.append(user)
+
+        return users
 
 
     def follow(self, user):
