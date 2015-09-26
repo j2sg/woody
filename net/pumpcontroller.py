@@ -176,7 +176,23 @@ class PumpController(object):
 
 
     def post(self, note):
-        pass
+        if not self._api or not note:
+            return False
+
+        res = self._api.Note(note.content)
+        res.to = self._api.Public
+        res.cc = (self._api.me.followers)
+
+        res.send()
+
+        note.id = res.url
+        note.author = User(res.author.webfinger,
+                           res.author.display_name.encode('utf-8'),
+                           res.author.summary.encode('utf-8'),
+                           res.author.location.display_name.encode('utf-8'))
+        note.date = res.published
+
+        return True
 
 
     def share(self, note):
