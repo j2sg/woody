@@ -21,6 +21,7 @@
 
 import pypump
 from model.user import User
+from model.note import Note
 
 class PumpController(object):
     def __init__(self, account, callback = None):
@@ -50,7 +51,23 @@ class PumpController(object):
 
 
     def timeline(self, limit = 0):
-        pass
+        if not self._api:
+            return None
+
+        notes = []
+
+        for activity in self._api.me.inbox.major[:limit]:
+            author = User(activity.actor.webfinger,
+                          activity.actor.display_name.encode('utf-8'),
+                          activity.actor.summary.encode('utf-8'),
+                          activity.actor.location.display_name.encode('utf-8'))
+
+            note = Note(activity.obj.url, author, activity.published, activity.obj.content.encode('utf-8') if activity.obj.content is not None else '')
+            note.source = str(activity.generator)
+
+            notes.append(note)
+
+        return notes
 
 
     def userTimeline(self, id, limit = 0):
